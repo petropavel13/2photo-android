@@ -3,11 +3,9 @@ package com.github.petropavel13.twophoto
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
-import android.view.Menu
-import android.view.MenuItem
+import android.widget.AbsListView
+import android.widget.HeaderViewListAdapter
 import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
 import com.github.petropavel13.twophoto.adapters.PostsAdapter
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.network.LimitedPostsList
@@ -25,18 +23,25 @@ public class PostsActivity : Activity() {
     var postsRefreshLayout: SwipeRefreshLayout? = null
     var postsListView: ListView? = null
 
-    inner class PostsListener: RequestListener<LimitedPostsList> {
+    val POSTS_PER_PAGE = 16
+
+    var isLoadingMore = true
+
+    val postsListener = object: RequestListener<LimitedPostsList> {
         override fun onRequestFailure(spiceException: SpiceException?) {
             postsRefreshLayout?.setRefreshing(false)
+
+            isLoadingMore = false
         }
 
         override fun onRequestSuccess(result: LimitedPostsList?) {
             postsRefreshLayout?.setRefreshing(false)
 
-            val adapter = postsListView?.getAdapter() as PostsAdapter
-            adapter.clear()
+            val adapter = (postsListView?.getAdapter() as HeaderViewListAdapter).getWrappedAdapter() as PostsAdapter
             adapter.addAll(result?.results)
             adapter.notifyDataSetChanged()
+
+            isLoadingMore = false
         }
     }
 
@@ -48,7 +53,7 @@ public class PostsActivity : Activity() {
             postsRefreshLayout = this
 
             setOnRefreshListener {
-                spiceManager.execute(PostsRequest(limit=16), PostsListener())
+                spiceManager.execute(PostsRequest(limit=POSTS_PER_PAGE), postsListener)
             }
         }
 
@@ -56,7 +61,22 @@ public class PostsActivity : Activity() {
 
         postsListView?.setAdapter(PostsAdapter(this, emptyList<Post>()))
 
-        spiceManager.execute(PostsRequest(limit=4), PostsListener())
+        postsListView?.setOnScrollListener(object: AbsListView.OnScrollListener {
+            override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
+            }
+
+            override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                if (isLoadingMore == false && firstVisibleItem + visibleItemCount == totalItemCount - 1) {
+                    spiceManager.execute(PostsRequest(limit=POSTS_PER_PAGE, page=totalItemCount / POSTS_PER_PAGE + 1), postsListener)
+
+                    isLoadingMore = true
+                }
+            }
+        })
+
+        postsListView?.addFooterView(getLayoutInflater().inflate(R.layout.loading_more_layout, null))
+
+        spiceManager.execute(PostsRequest(limit=POSTS_PER_PAGE), postsListener)
     }
 
     override fun onStart() {
