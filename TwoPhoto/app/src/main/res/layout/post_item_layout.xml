@@ -1,27 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.github.petropavel13.twophoto.views.PostItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Essa Al Mazroee (3ees)"
-        android:id="@+id/post_title_text_view" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:padding="4dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Автор: nik truman"
-        android:id="@+id/post_author_text_view" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:id="@+id/post_face_image_view" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Метки: photography / animals, plants &amp; nature /"
-        android:id="@+id/post_tags_text_view" />
+        </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Essa Al Mazroee (3ees)"
+            android:id="@+id/post_title_text_view"
+            android:ellipsize="marquee"
+            android:maxLines="2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Автор: nik truman"
+            android:id="@+id/post_author_text_view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Метки: photography / animals, plants &amp; nature /"
+            android:id="@+id/post_tags_text_view"
+            android:ellipsize="marquee"
+            android:singleLine="true" />
+
+        </LinearLayout>
+
 </com.github.petropavel13.twophoto.views.PostItemView>
