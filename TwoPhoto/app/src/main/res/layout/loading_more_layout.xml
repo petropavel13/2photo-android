@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/loading_more_progress"
-        android:layout_gravity="center_vertical"
-        android:indeterminate="true" />
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:padding="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Загрузка..."
-        android:id="@+id/loading_more_title"
-        android:layout_gravity="center_vertical" />
-</LinearLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/loading_more_progress"
+            android:layout_gravity="center_vertical"
+            android:indeterminate="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Загрузка..."
+            android:id="@+id/loading_more_title"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="8dp" />
+
+        </LinearLayout>
+
+</FrameLayout>
