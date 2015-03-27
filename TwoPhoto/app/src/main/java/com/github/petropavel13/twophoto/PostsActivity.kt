@@ -3,10 +3,12 @@ package com.github.petropavel13.twophoto
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
+import android.view.View
 import android.widget.AbsListView
 import android.widget.HeaderViewListAdapter
 import android.widget.ListView
 import com.github.petropavel13.twophoto.adapters.PostsAdapter
+import com.github.petropavel13.twophoto.extensions.getRealAdapter
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.network.LimitedPostsList
 import com.github.petropavel13.twophoto.network.PostsRequest
@@ -22,6 +24,7 @@ public class PostsActivity : Activity() {
 
     var postsRefreshLayout: SwipeRefreshLayout? = null
     var postsListView: ListView? = null
+    var postsListViewFooter: View? = null
 
     val POSTS_PER_PAGE = 16
 
@@ -37,9 +40,10 @@ public class PostsActivity : Activity() {
         override fun onRequestSuccess(result: LimitedPostsList?) {
             postsRefreshLayout?.setRefreshing(false)
 
-            val adapter = (postsListView?.getAdapter() as HeaderViewListAdapter).getWrappedAdapter() as PostsAdapter
-            adapter.addAll(result?.results)
-            adapter.notifyDataSetChanged()
+            with(postsListView?.getRealAdapter<PostsAdapter>()) {
+                this?.addAll(result?.results)
+                this?.notifyDataSetChanged()
+            }
 
             isLoadingMore = false
         }
@@ -49,10 +53,19 @@ public class PostsActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_posts)
 
+        postsListViewFooter = getLayoutInflater().inflate(R.layout.loading_more_layout, null)
+
         with(findViewById(R.id.posts_refresh_layout) as SwipeRefreshLayout) {
             postsRefreshLayout = this
 
             setOnRefreshListener {
+                postsListViewFooter?.setVisibility(View.GONE)
+
+                with(postsListView?.getRealAdapter<PostsAdapter>()) {
+                    this?.clear()
+                    this?.notifyDataSetChanged()
+                }
+
                 spiceManager.execute(PostsRequest(limit=POSTS_PER_PAGE), postsListener)
             }
         }
@@ -67,6 +80,8 @@ public class PostsActivity : Activity() {
 
             override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                 if (isLoadingMore == false && firstVisibleItem + visibleItemCount == totalItemCount - 1) {
+                    postsListViewFooter?.setVisibility(View.VISIBLE)
+
                     spiceManager.execute(PostsRequest(limit=POSTS_PER_PAGE, page=totalItemCount / POSTS_PER_PAGE + 1), postsListener)
 
                     isLoadingMore = true
@@ -74,7 +89,7 @@ public class PostsActivity : Activity() {
             }
         })
 
-        postsListView?.addFooterView(getLayoutInflater().inflate(R.layout.loading_more_layout, null))
+        postsListView?.addFooterView(postsListViewFooter)
 
         spiceManager.execute(PostsRequest(limit=POSTS_PER_PAGE), postsListener)
     }
