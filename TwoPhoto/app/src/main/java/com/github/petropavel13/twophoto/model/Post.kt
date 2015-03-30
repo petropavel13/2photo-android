@@ -7,12 +7,12 @@ import java.util.ArrayList
  * Created by petropavel on 23/03/15.
  */
 
-class Post() {
-    [Key] var entries: List<Post.Entry> = emptyList<Post.Entry>()
-    [Key] var artists: List<Artist> = emptyList<Post.Artist>()
-    [Key] var tags: List<Tag> = emptyList<Post.Tag>()
-    [Key] var categories: List<Category> = emptyList<Post.Category>()
-    [Key] var author: Post.Author = Author()
+open class Post() {
+    [Key] var entries = emptyList<Entry>()
+    [Key] var artists = emptyList<Artist>()
+    [Key] var tags: List<Tag> = emptyList<Tag>()
+    [Key] var categories = emptyList<Category>()
+    [Key] var author = Author()
     [Key] var number_of_comments: Int = 0
     [Key] var id: Int = 0
     [Key] var title: String = ""

@@ -17,7 +17,7 @@
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
-            android:id="@+id/post_face_image_view" />
+            android:id="@+id/post_item_face_image_view" />
 
         </RelativeLayout>
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Essa Al Mazroee (3ees)"
-            android:id="@+id/post_title_text_view"
+            android:id="@+id/post_item_title_text_view"
             android:ellipsize="marquee"
             android:maxLines="2" />
 
@@ -42,14 +42,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Автор: nik truman"
-            android:id="@+id/post_author_text_view" />
+            android:id="@+id/post_item_author_text_view" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Метки: photography / animals, plants &amp; nature /"
-            android:id="@+id/post_tags_text_view"
+            android:id="@+id/post_item_tags_text_view"
             android:ellipsize="marquee"
             android:singleLine="true" />
 

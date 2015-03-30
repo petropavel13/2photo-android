@@ -23,10 +23,10 @@ class PostItemView: LinearLayout {
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        titleTextView = findViewById(R.id.post_title_text_view) as? TextView
-        authorTextView = findViewById(R.id.post_author_text_view) as? TextView
-        tagsTextView = findViewById(R.id.post_tags_text_view) as? TextView
-        faceImageView = findViewById(R.id.post_face_image_view) as? ImageView
+        titleTextView = findViewById(R.id.post_item_title_text_view) as? TextView
+        authorTextView = findViewById(R.id.post_item_author_text_view) as? TextView
+        tagsTextView = findViewById(R.id.post_item_tags_text_view) as? TextView
+        faceImageView = findViewById(R.id.post_item_face_image_view) as? ImageView
     }
 
     constructor(ctx: Context): super(ctx) { }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.petropavel13.twophoto.views.PostDetailEntryView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="@dimen/post_detail_entry_width"
+        android:layout_height="180dp"
+        android:id="@+id/post_detail_entry_image_view"
+        android:src="@mipmap/ic_launcher" />
+</com.github.petropavel13.twophoto.views.PostDetailEntryView>
