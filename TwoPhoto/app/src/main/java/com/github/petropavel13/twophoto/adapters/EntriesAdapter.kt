@@ -19,6 +19,9 @@ class EntriesAdapter(ctx: Context, entries: List<Post.Entry>): ArrayAdapter<Post
         addAll(entries)
     }
 
+    val entries: Array<Post.Entry>
+    get() = Array(getCount(), { getItem(it) })
+
     val inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {

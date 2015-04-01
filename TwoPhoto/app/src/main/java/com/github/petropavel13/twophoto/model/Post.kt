@@ -1,7 +1,8 @@
 package com.github.petropavel13.twophoto.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.api.client.util.Key
-import java.util.ArrayList
 
 /**
  * Created by petropavel on 23/03/15.
@@ -29,13 +30,44 @@ open class Post() {
         [Key] public var avatar_url: String = ""
     }
 
-    public class Entry() {
+    public class Entry(): Parcelable {
         [Key] public var id: Int = 0
         [Key] public var big_img_url: String = ""
         [Key] public var medium_img_url: String = ""
         [Key] public var description: String = ""
         [Key] public var rating: Int = 0
         [Key] public var order: Int = 0
+
+        companion object {
+            val CREATOR: Parcelable.Creator<Entry> = object: Parcelable.Creator<Post.Entry> {
+                override fun createFromParcel(src: Parcel): Entry? {
+                    val entry = Entry()
+                    entry.id = src.readInt()
+                    entry.big_img_url = src.readString()
+                    entry.medium_img_url = src.readString()
+                    entry.description = src.readString()
+                    entry.rating = src.readInt()
+                    entry.order = src.readInt()
+
+                    return entry
+                }
+
+                override fun newArray(size: Int) = Array(size, { Entry() })
+            }
+        }
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            with(dest) {
+                writeInt(id)
+                writeString(big_img_url)
+                writeString(medium_img_url)
+                writeString(description)
+                writeInt(rating)
+                writeInt(order)
+            }
+        }
     }
 
     public class Artist() {

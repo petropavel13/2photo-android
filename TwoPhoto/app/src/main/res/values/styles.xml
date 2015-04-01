@@ -6,4 +6,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AppThemeFullScreen" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 </resources>

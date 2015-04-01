@@ -1,5 +1,6 @@
 package com.github.petropavel13.twophoto
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -75,6 +76,15 @@ public class PostDetailActivity : SpiceActivity() {
             entriesGridView = this
 
             setAdapter(EntriesAdapter(ctx, emptyList<Post.Entry>()))
+
+            setOnItemClickListener { adapterView, view, i, l ->
+                with(adapterView.getRealAdapter<EntriesAdapter>()) {
+                    val postEntriesIntent = Intent(ctx, javaClass<PostEntriesActivity>())
+                    postEntriesIntent.putParcelableArrayListExtra(PostEntriesActivity.POST_ENTRIES_KEY, this?.entries?.toArrayList())
+                    postEntriesIntent.putExtra(PostEntriesActivity.SELECTED_ENTRY_INDEX, i)
+                    startActivity(postEntriesIntent)
+                }
+            }
         }
 
         postId = getIntent().getIntExtra(POST_ID_KEY, postId)

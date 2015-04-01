@@ -28,6 +28,11 @@
             android:name=".PostDetailActivity"
             android:label="@string/title_activity_post_detail" >
         </activity>
+        <activity
+            android:name=".PostEntriesActivity"
+            android:theme="@style/AppThemeFullScreen"
+            android:label="@string/title_activity_post_entries" >
+        </activity>
     </application>
 
 </manifest>
