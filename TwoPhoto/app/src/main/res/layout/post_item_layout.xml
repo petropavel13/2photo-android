@@ -6,10 +6,9 @@
     android:layout_height="100dp">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/post_item_face_image_width"
         android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:padding="4dp">
+        android:padding="8dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -25,7 +24,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
         android:padding="8dp">
 
         <TextView
