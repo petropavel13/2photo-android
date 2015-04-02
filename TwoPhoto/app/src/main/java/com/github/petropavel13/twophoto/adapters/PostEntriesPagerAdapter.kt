@@ -5,12 +5,9 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.views.EntryView
-import java.lang.ref.WeakReference
-import java.util.ArrayList
 import java.util.Collections
 import java.util.WeakHashMap
 
@@ -32,6 +29,16 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
             _views.forEach { it?.onTapListener = newValue }
         }
 
+    var _showEntriesDescription = true
+
+    var showEntriesDescription: Boolean
+        get() = _showEntriesDescription
+        set(newValue) {
+            _showEntriesDescription = newValue
+
+            _views.forEach { it?.showDescriptionText = newValue }
+        }
+
     var _views = Collections.newSetFromMap(WeakHashMap<EntryView, Boolean>(getCount()))
 
     override fun getCount() = entries.count()
@@ -45,6 +52,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
             this.entry = entries[position]
 
             onTapListener = _onEntryTapListener
+            showDescriptionText = showEntriesDescription
 
             (container as ViewPager).addView(this, 0)
 

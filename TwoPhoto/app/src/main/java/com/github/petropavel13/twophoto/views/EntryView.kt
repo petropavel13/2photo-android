@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -18,7 +18,7 @@ import com.squareup.picasso.Target
  * Created by petropavel on 31/03/15.
  */
 
-class EntryView: LinearLayout {
+class EntryView: RelativeLayout {
 
     constructor(ctx: Context): super(ctx) { }
 
@@ -45,6 +45,20 @@ class EntryView: LinearLayout {
         }
     }
 
+    var _showDescriptionText = false
+
+    var showDescriptionText: Boolean
+        get() = _showDescriptionText
+        set(newValue) {
+            _showDescriptionText = newValue
+
+            if(showDescriptionText && entry.description.isEmpty() == false) {
+                descriptionTextView?.setVisibility(View.VISIBLE)
+            } else {
+                descriptionTextView?.setVisibility(View.INVISIBLE)
+            }
+        }
+
     var _onTapListener: View.OnClickListener? = null
 
     var onTapListener: View.OnClickListener?
@@ -52,7 +66,11 @@ class EntryView: LinearLayout {
         set(newValue) {
             _onTapListener = newValue
 
-            imageView?.setOnClickListener(newValue)
+            imageView?.setOnClickListener {
+                showDescriptionText = !showDescriptionText
+
+                newValue?.onClick(it)
+            }
         }
 
     var _entry = Post.Entry()
@@ -62,12 +80,11 @@ class EntryView: LinearLayout {
         set(newValue) {
             _entry = newValue
 
-            when(newValue.description.isEmpty()) {
-                true -> descriptionTextView?.setVisibility(View.GONE)
-                false -> {
-                    descriptionTextView?.setText(newValue.description)
-                    descriptionTextView?.setVisibility(View.VISIBLE)
-                }
+            if(newValue.description.isEmpty()) {
+                descriptionTextView?.setVisibility(View.GONE)
+            } else {
+                descriptionTextView?.setText(newValue.description)
+                descriptionTextView?.setVisibility(View.VISIBLE)
             }
 
             Picasso.with(getContext())

@@ -36,14 +36,14 @@ public class PostEntriesActivity : Activity() {
 
             adapter.onEntryTapListener = object: View.OnClickListener {
                 override fun onClick(view: View) {
-                    when(counterTextView?.getVisibility()) {
-                        View.VISIBLE -> {
-                            counterTextView?.setVisibility(View.GONE)
-                        }
+                    if(counterTextView?.getVisibility() == View.VISIBLE) {
+                        counterTextView?.setVisibility(View.GONE)
 
-                        View.GONE -> {
-                            counterTextView?.setVisibility(View.VISIBLE)
-                        }
+                        adapter.showEntriesDescription = false
+                    } else {
+                        counterTextView?.setVisibility(View.VISIBLE)
+
+                        adapter.showEntriesDescription = true
                     }
                 }
             }

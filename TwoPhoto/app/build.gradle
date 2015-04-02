@@ -39,6 +39,7 @@ dependencies {
     }
     compile "com.squareup.picasso:picasso:+"
     compile "com.davemorrissey.labs:subsampling-scale-image-view:+"
+    compile "com.etsy.android.grid:library:+"
 }
 buildscript {
     ext.kotlin_version = '0.11.91'

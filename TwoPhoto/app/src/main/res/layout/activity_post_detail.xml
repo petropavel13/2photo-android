@@ -13,43 +13,12 @@
         android:indeterminate="true"
         android:id="@+id/post_detail_loading_progress_bar" />
 
-    <ScrollView
+    <com.etsy.android.grid.StaggeredGridView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/post_detail_entries_grid_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/post_detail_scroll_view">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Сказки по-взрослому... Особенное представление детстких сказок от российской художницы под ником cornacchia"
-                android:id="@+id/post_detail_title_text_view" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Гениальная художница Cornacchia в своих работах смогла совместить не только оригинальные идеи и профессиональное мастерство их воплощения, но и ту сказочную атмосферу с реальностью, которой пронизан каждый ее рисунок."
-                android:id="@+id/post_detail_description_text_view" />
-
-            <com.github.petropavel13.twophoto.views.AutoHeightGridView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/post_detail_entries_grid_view"
-                android:stretchMode="columnWidth"
-                android:numColumns="auto_fit"
-                android:verticalSpacing="8dp"
-                android:horizontalSpacing="10dp"
-                android:isScrollContainer="false"
-                android:gravity="center"
-                android:paddingTop="8dp" />
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_height="wrap_content"
+        app:item_margin="8dp"
+        android:paddingTop="8dp" />
 
 </FrameLayout>
