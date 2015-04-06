@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TwoPhoto</string>
+    <string name="post_entries_action_set_wallpaper">Установить на заставку</string>
+    <string name="post_entries_action_download_picture">Скачать</string>
+    <string name="post_entries_action_set_wallpaper_complete">Новая заставка установлена</string>
+    <string name="post_entries_action_set_wallpaper_failed">Не удалось установить новую заставку</string>
+    <string name="post_entries_action_download_picture_complete">Изображение сохранено</string>
+    <string name="post_entries_action_download_picture_failed">Не удалось сохранить изображение</string>
+</resources>

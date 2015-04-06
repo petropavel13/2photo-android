@@ -1,6 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.github.petropavel13.twophoto.PostEntriesActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" android:showAsAction="never" />
+    <item android:id="@+id/menu_post_entries_action_download_picture" android:title="@string/post_entries_action_download_picture"
+        android:orderInCategory="100" app:showAsAction="ifRoom" android:icon="@drawable/ic_file_download_white_24dp" />
+    <item android:id="@+id/menu_post_entries_action_set_wallpaper" android:title="@string/post_entries_action_set_wallpaper"
+        android:orderInCategory="100" app:showAsAction="ifRoom" android:icon="@drawable/ic_image_white_24dp" />
 </menu>

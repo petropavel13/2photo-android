@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">TwoPhoto</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="post_entries_action_set_wallpaper">Set as wallpaper</string>
+    <string name="post_entries_action_set_wallpaper_complete">New wallpaper was set</string>
+    <string name="post_entries_action_set_wallpaper_failed">Failed to set new wallpaper</string>
+
+    <string name="post_entries_action_download_picture">Download</string>
+    <string name="post_entries_action_download_picture_complete">Download picture complete</string>
+    <string name="post_entries_action_download_picture_failed">Failed to download picture</string>
+
     <string name="title_activity_post_detail">PostDetailActivity</string>
-    <string name="title_activity_post_entries">PostEntriesActivity</string>
+    <string name="title_activity_post_entries"></string>
 </resources>

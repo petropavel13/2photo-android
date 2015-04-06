@@ -8,8 +8,7 @@ import android.view.View
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.views.EntryView
-import java.util.Collections
-import java.util.WeakHashMap
+import java.util.HashMap
 
 /**
  * Created by petropavel on 31/03/15.
@@ -26,7 +25,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
         set(newValue) {
             _onEntryTapListener = newValue
 
-            _views.forEach { it?.onTapListener = newValue }
+            _positionViewMap.values().forEach { it.onTapListener = newValue }
         }
 
     var _showEntriesDescription = true
@@ -36,10 +35,12 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
         set(newValue) {
             _showEntriesDescription = newValue
 
-            _views.forEach { it?.showDescriptionText = newValue }
+            _positionViewMap.values().forEach { it.showDescriptionText = newValue }
         }
 
-    var _views = Collections.newSetFromMap(WeakHashMap<EntryView, Boolean>(getCount()))
+    val _positionViewMap = HashMap<Int, EntryView>(3)
+
+    fun getViewForAtPosition(position: Int): EntryView? = _positionViewMap.get(position)
 
     override fun getCount() = entries.count()
 
@@ -56,13 +57,17 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
 
             (container as ViewPager).addView(this, 0)
 
-            _views.add(this)
+            _positionViewMap.put(position, this)
 
             return this
         }
     }
 
     override fun destroyItem(container: View?, position: Int, item: Any?) {
-        (container as ViewPager).removeView(item as EntryView)
+        with(item as EntryView) {
+            (container as ViewPager).removeView(this)
+
+            _positionViewMap.remove(this)
+        }
     }
 }

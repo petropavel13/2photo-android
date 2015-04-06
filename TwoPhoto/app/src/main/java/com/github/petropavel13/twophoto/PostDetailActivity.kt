@@ -63,6 +63,8 @@ public class PostDetailActivity : SpiceActivity() {
 
         val ctx = this
 
+        postId = getIntent().getIntExtra(POST_ID_KEY, postId)
+
         with(findViewById(R.id.post_detail_entries_grid_view) as StaggeredGridView) {
             entriesGridView = this
 
@@ -80,6 +82,7 @@ public class PostDetailActivity : SpiceActivity() {
                     val postEntriesIntent = Intent(ctx, javaClass<PostEntriesActivity>())
                     postEntriesIntent.putParcelableArrayListExtra(PostEntriesActivity.POST_ENTRIES_KEY, this?.entries?.toArrayList())
                     postEntriesIntent.putExtra(PostEntriesActivity.SELECTED_ENTRY_INDEX, i - 1)
+                    postEntriesIntent.putExtra(POST_ID_KEY, postId)
                     startActivity(postEntriesIntent)
                 }
             }
@@ -89,8 +92,6 @@ public class PostDetailActivity : SpiceActivity() {
 
         titleTextView?.setVisibility(View.GONE)
         descriptionTextView?.setVisibility(View.GONE)
-
-        postId = getIntent().getIntExtra(POST_ID_KEY, postId)
 
         spiceManager.execute(PostRequest(postId), postListener)
     }
