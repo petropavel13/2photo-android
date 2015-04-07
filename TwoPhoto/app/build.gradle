@@ -41,6 +41,7 @@ dependencies {
     compile "com.davemorrissey.labs:subsampling-scale-image-view:+"
     compile "com.etsy.android.grid:library:+"
     compile "com.android.support:appcompat-v7:+"
+    compile "com.makeramen:roundedimageview:+"
 }
 buildscript {
     ext.kotlin_version = '0.11.91'
