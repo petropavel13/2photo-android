@@ -45,4 +45,11 @@ class PostDetailEntryView: LinearLayout {
                     .resizeDimen(R.dimen.post_detail_entry_width, R.dimen.post_detail_entry_height)
                     .into(imageView)
         }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+
+        Picasso.with(getContext())
+                .cancelRequest(imageView)
+    }
 }

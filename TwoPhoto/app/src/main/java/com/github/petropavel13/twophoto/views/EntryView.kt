@@ -129,5 +129,11 @@ class EntryView: RelativeLayout {
             setOnClickListener { loadImage("http://${entry.big_img_url}") }
         }
     }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+
+        Picasso.with(getContext())
+                .cancelRequest(target)
     }
 }
