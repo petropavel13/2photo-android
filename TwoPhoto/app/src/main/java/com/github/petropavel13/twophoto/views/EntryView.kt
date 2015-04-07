@@ -32,7 +32,7 @@ class EntryView: RelativeLayout {
 
     var imageView: SubsamplingScaleImageView? = null
     var descriptionTextView: TextView? = null
-    var errorView: View? = null
+    var retryView: RetryView? = null
     var progressBar: ProgressBar? = null
 
     val target = object: Target {
@@ -41,13 +41,12 @@ class EntryView: RelativeLayout {
 
             progressBar?.setVisibility(View.INVISIBLE)
             imageView?.setVisibility(View.VISIBLE)
-            errorView?.setVisibility(View.INVISIBLE)
         }
 
         override fun onBitmapFailed(errorDrawable: Drawable?) {
             progressBar?.setVisibility(View.INVISIBLE)
             imageView?.setVisibility(View.INVISIBLE)
-            errorView?.setVisibility(View.VISIBLE)
+            retryView?.setVisibility(View.VISIBLE)
         }
 
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
@@ -103,7 +102,7 @@ class EntryView: RelativeLayout {
     fun loadImage(imageUrl: String) {
         progressBar?.setVisibility(View.VISIBLE)
         imageView?.setVisibility(View.INVISIBLE)
-        errorView?.setVisibility(View.INVISIBLE)
+        retryView?.setVisibility(View.INVISIBLE)
 
         Picasso.with(getContext())
                 .cancelRequest(target)
@@ -123,10 +122,16 @@ class EntryView: RelativeLayout {
 
         progressBar = findViewById(R.id.entry_progress_bar) as? ProgressBar
 
-        errorView = findViewById(R.id.entry_error_layout)
+        with(findViewById(R.id.entry_retry_view) as RetryView) {
+            retryView = this
 
-        with(findViewById(R.id.entry_refresh_button) as ImageButton){
-            setOnClickListener { loadImage("http://${entry.big_img_url}") }
+            errorTextResource = R.string.entry_failed_to_load_image
+
+            onRetryListener = object: View.OnClickListener{
+                override fun onClick(view: View) {
+                    loadImage("http://${entry.big_img_url}")
+                }
+            }
         }
     }
 

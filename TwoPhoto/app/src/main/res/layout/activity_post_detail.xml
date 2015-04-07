@@ -13,6 +13,12 @@
         android:indeterminate="true"
         android:id="@+id/post_detail_loading_progress_bar" />
 
+    <include android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/post_detail_retry_view"
+        layout="@layout/retry_view_layout"
+        android:layout_gravity="center" />
+
     <com.etsy.android.grid.StaggeredGridView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/post_detail_entries_grid_view"

@@ -21,28 +21,11 @@
             android:id="@+id/entry_image_view"
             android:visibility="invisible" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <include android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible"
-            android:id="@+id/entry_error_layout">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/entry_failed_to_load_image" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/entry_refresh_button"
-                android:src="@drawable/ic_refresh_white_48dp"
-                android:layout_gravity="center_horizontal" />
-
-        </LinearLayout>
+            android:id="@+id/entry_retry_view"
+            layout="@layout/retry_view_layout"
+            android:layout_gravity="center" />
 
     </FrameLayout>
 

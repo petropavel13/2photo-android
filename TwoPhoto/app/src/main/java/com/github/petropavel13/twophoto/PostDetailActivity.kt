@@ -11,6 +11,7 @@ import com.github.petropavel13.twophoto.extensions.getRealAdapter
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.model.PostDetail
 import com.github.petropavel13.twophoto.network.PostRequest
+import com.github.petropavel13.twophoto.views.RetryView
 import com.octo.android.robospice.persistence.exception.SpiceException
 import com.octo.android.robospice.request.listener.RequestListener
 
@@ -25,6 +26,7 @@ public class PostDetailActivity : SpiceActivity() {
 
     val postListener = object: RequestListener<PostDetail> {
         override fun onRequestFailure(spiceException: SpiceException?) {
+            retryView?.setVisibility(View.VISIBLE)
         }
 
         override fun onRequestSuccess(result: PostDetail?) {
@@ -47,6 +49,7 @@ public class PostDetailActivity : SpiceActivity() {
     var descriptionTextView: TextView? = null
     var entriesGridView: StaggeredGridView? = null
     var loadingProgressBar: ProgressBar? = null
+    var retryView: RetryView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +95,20 @@ public class PostDetailActivity : SpiceActivity() {
 
         titleTextView?.setVisibility(View.GONE)
         descriptionTextView?.setVisibility(View.GONE)
+
+        with(findViewById(R.id.post_detail_retry_view) as RetryView){
+            retryView = this
+
+            onRetryListener = object: View.OnClickListener{
+                override fun onClick(view: View) {
+                    setVisibility(View.INVISIBLE)
+
+                    spiceManager.execute(PostRequest(postId), postListener)
+                }
+            }
+
+            setVisibility(View.INVISIBLE)
+        }
 
         spiceManager.execute(PostRequest(postId), postListener)
     }
