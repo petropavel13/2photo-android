@@ -9,6 +9,8 @@
     <string name="post_entries_action_download_picture_complete">Download picture complete</string>
     <string name="post_entries_action_download_picture_failed">Failed to download picture</string>
 
-    <string name="title_activity_post_detail">PostDetailActivity</string>
-    <string name="title_activity_post_entries"></string>
+    <string name="entry_failed_to_load_image">Failed to load image</string>
+
+    <string name="title_activity_post_detail" translatable="false">PostDetailActivity</string>
+    <string name="title_activity_post_entries" translatable="false"></string>
 </resources>

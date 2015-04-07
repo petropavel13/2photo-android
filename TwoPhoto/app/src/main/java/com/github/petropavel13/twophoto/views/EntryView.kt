@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
+import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.davemorrissey.labs.subscaleview.ImageSource
@@ -30,14 +32,22 @@ class EntryView: RelativeLayout {
 
     var imageView: SubsamplingScaleImageView? = null
     var descriptionTextView: TextView? = null
+    var errorView: View? = null
+    var progressBar: ProgressBar? = null
 
     val target = object: Target {
         override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
             imageView?.setImage(ImageSource.bitmap(bitmap))
+
+            progressBar?.setVisibility(View.INVISIBLE)
+            imageView?.setVisibility(View.VISIBLE)
+            errorView?.setVisibility(View.INVISIBLE)
         }
 
         override fun onBitmapFailed(errorDrawable: Drawable?) {
-            //
+            progressBar?.setVisibility(View.INVISIBLE)
+            imageView?.setVisibility(View.INVISIBLE)
+            errorView?.setVisibility(View.VISIBLE)
         }
 
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
@@ -87,19 +97,37 @@ class EntryView: RelativeLayout {
                 descriptionTextView?.setVisibility(View.VISIBLE)
             }
 
-            Picasso.with(getContext())
-                    .cancelRequest(target)
-
-            Picasso.with(getContext())
-                    .load("http://${newValue.big_img_url}")
-                    .priority(Picasso.Priority.HIGH)
-                    .into(target)
+            loadImage("http://${newValue.big_img_url}")
         }
+
+    fun loadImage(imageUrl: String) {
+        progressBar?.setVisibility(View.VISIBLE)
+        imageView?.setVisibility(View.INVISIBLE)
+        errorView?.setVisibility(View.INVISIBLE)
+
+        Picasso.with(getContext())
+                .cancelRequest(target)
+
+        Picasso.with(getContext())
+                .load(imageUrl)
+                .priority(Picasso.Priority.HIGH)
+                .into(target)
+    }
+
 
     override fun onFinishInflate() {
         super.onFinishInflate()
 
         imageView = findViewById(R.id.entry_image_view) as? SubsamplingScaleImageView
         descriptionTextView = findViewById(R.id.entry_description_text_view) as? TextView
+
+        progressBar = findViewById(R.id.entry_progress_bar) as? ProgressBar
+
+        errorView = findViewById(R.id.entry_error_layout)
+
+        with(findViewById(R.id.entry_refresh_button) as ImageButton){
+            setOnClickListener { loadImage("http://${entry.big_img_url}") }
+        }
+    }
     }
 }

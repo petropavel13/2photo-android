@@ -3,10 +3,48 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/entry_image_view" />
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:id="@+id/entry_progress_bar" />
+
+        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/entry_image_view"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:id="@+id/entry_error_layout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/entry_failed_to_load_image" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/entry_refresh_button"
+                android:src="@drawable/ic_refresh_white_48dp"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -17,5 +55,5 @@
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:background="?android:colorBackground"
-        android:paddingBottom="8dp" />
+        android:padding="8dp" />
 </com.github.petropavel13.twophoto.views.EntryView >
