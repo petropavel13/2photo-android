@@ -2,7 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
     <dimen name="post_detail_entry_width">160dp</dimen>
     <dimen name="post_detail_entry_height">0dp</dimen>
-    <dimen name="post_item_face_image_width">100dp</dimen>
+
+    <dimen name="post_item_face_image_width">128dp</dimen>
+    <dimen name="post_item_attributes_height">22dp</dimen>
 </resources>

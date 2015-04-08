@@ -19,6 +19,8 @@ class PostItemView: LinearLayout {
     var authorTextView: TextView? = null
     var tagsTextView: TextView? = null
     var faceImageView: ImageView? = null
+    var commentsCountTextView: TextView? = null
+    var ratingTextView: TextView? = null
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -27,6 +29,17 @@ class PostItemView: LinearLayout {
         authorTextView = findViewById(R.id.post_item_author_text_view) as? TextView
         tagsTextView = findViewById(R.id.post_item_tags_text_view) as? TextView
         faceImageView = findViewById(R.id.post_item_face_image_view) as? ImageView
+        commentsCountTextView = findViewById(R.id.post_item_comments_count_text_view) as? TextView
+        ratingTextView = findViewById(R.id.post_item_rating_text_view) as? TextView
+
+        val attributesBackgroundView = findViewById(R.id.post_item_attributes_background_view)
+        val attributesLayout = findViewById(R.id.post_item_attributes_layout)
+
+        attributesLayout?.getViewTreeObserver()?.addOnGlobalLayoutListener{
+            val newParams = attributesBackgroundView?.getLayoutParams()
+            newParams?.width = attributesLayout?.getMeasuredWidth()
+            attributesBackgroundView?.setLayoutParams(newParams)
+        }
     }
 
     constructor(ctx: Context): super(ctx) { }
@@ -48,6 +61,8 @@ class PostItemView: LinearLayout {
             titleTextView?.setTextColor(Color.parseColor(_post.color))
             authorTextView?.setText("Автор: ${newValue.author.name}")
             tagsTextView?.setText("Теги: ${newValue.tags.map { it.title }.join(", ")}")
+            commentsCountTextView?.setText(newValue.number_of_comments.toString())
+            ratingTextView?.setText("${newValue.rating}%")
 
             Picasso.with(getContext())
                     .cancelRequest(faceImageView)

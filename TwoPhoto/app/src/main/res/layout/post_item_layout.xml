@@ -8,23 +8,89 @@
     <RelativeLayout
         android:layout_width="@dimen/post_item_face_image_width"
         android:layout_height="match_parent"
-        android:padding="8dp">
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="4dp"
+        android:paddingBottom="8dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/post_item_face_image_width"
+            android:layout_height="@dimen/post_item_face_image_width"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center"
-            android:layout_centerInParent="true"
-            android:id="@+id/post_item_face_image_view" />
+            android:id="@+id/post_item_face_image_view"
+            android:scaleType="centerCrop" />
 
-        </RelativeLayout>
+        <View
+            android:layout_width="112dp"
+            android:layout_height="@dimen/post_item_attributes_height"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/post_item_attributes_background"
+            android:alpha="0.6"
+            android:layout_margin="2dp"
+            android:id="@+id/post_item_attributes_background_view"
+            android:layout_centerHorizontal="true" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/post_item_attributes_height"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="2dp"
+            android:id="@+id/post_item_attributes_layout"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src="@drawable/ic_mode_comment_white_18dp"
+                android:paddingLeft="4dp"
+                android:paddingTop="2dp"
+                android:alpha="0.5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="35"
+                android:id="@+id/post_item_comments_count_text_view"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:gravity="center_vertical" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_thumb_up_white_18dp"
+                android:paddingTop="2dp"
+                android:paddingLeft="4dp"
+                android:paddingBottom="2dp"
+                android:alpha="0.5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="100%"
+                android:id="@+id/post_item_rating_text_view"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:gravity="center_vertical"
+                android:layout_gravity="right" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp">
+        android:paddingLeft="4dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -51,6 +117,6 @@
             android:ellipsize="marquee"
             android:singleLine="true" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 </com.github.petropavel13.twophoto.views.PostItemView>
