@@ -5,7 +5,6 @@
     android:id="@+id/post_detail_entries_grid_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:item_margin="8dp"
+    app:item_margin="@dimen/post_detail_entry_item_margin"
     app:column_count_portrait="3"
-    app:column_count_landscape="4"
-    android:paddingTop="8dp" />
+    app:column_count_landscape="4" />

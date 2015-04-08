@@ -21,6 +21,8 @@
 
     <include android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
         android:id="@+id/post_detail_entries_grid_view"
         layout="@layout/post_detail_grid" />
+
 </FrameLayout>

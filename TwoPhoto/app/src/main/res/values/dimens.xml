@@ -3,9 +3,11 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="post_detail_entry_width">160dp</dimen>
-    <dimen name="post_detail_entry_height">0dp</dimen>
+    <dimen name="zero">0dp</dimen>
 
     <dimen name="post_item_face_image_width">128dp</dimen>
     <dimen name="post_item_attributes_height">22dp</dimen>
+
+    <dimen name="post_detail_entry_width">136dp</dimen>
+    <dimen name="post_detail_entry_item_margin">8dp</dimen>
 </resources>

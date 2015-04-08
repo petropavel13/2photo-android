@@ -42,7 +42,7 @@ class PostDetailEntryView: LinearLayout {
             Picasso.with(getContext())
                     .load("http://${newValue.medium_img_url}")
                     .priority(Picasso.Priority.NORMAL)
-                    .resizeDimen(R.dimen.post_detail_entry_width, R.dimen.post_detail_entry_height)
+                    .resizeDimen(R.dimen.post_detail_entry_width, R.dimen.zero)
                     .into(imageView)
         }
 
