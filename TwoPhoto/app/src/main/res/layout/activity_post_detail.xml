@@ -19,12 +19,8 @@
         layout="@layout/retry_view_layout"
         android:layout_gravity="center" />
 
-    <com.etsy.android.grid.StaggeredGridView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/post_detail_entries_grid_view"
-        android:layout_width="match_parent"
+    <include android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:item_margin="8dp"
-        android:paddingTop="8dp" />
-
+        android:id="@+id/post_detail_entries_grid_view"
+        layout="@layout/post_detail_grid" />
 </FrameLayout>
