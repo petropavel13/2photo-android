@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/entry_retry_view"
             layout="@layout/retry_view_layout"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
     </FrameLayout>
 

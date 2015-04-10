@@ -36,15 +36,19 @@ class PostDetailEntryView: LinearLayout {
         set(newValue) {
             _entry = newValue
 
-            Picasso.with(getContext())
-                    .cancelRequest(imageView)
-
-            Picasso.with(getContext())
-                    .load("http://${newValue.medium_img_url}")
-                    .priority(Picasso.Priority.NORMAL)
-                    .resizeDimen(R.dimen.post_detail_entry_width, R.dimen.zero)
-                    .into(imageView)
+            loadImage("http://${newValue.medium_img_url}")
         }
+
+    fun loadImage(imageUrl: String) {
+        Picasso.with(getContext())
+                .cancelRequest(imageView)
+
+        Picasso.with(getContext())
+                .load(imageUrl)
+                .priority(Picasso.Priority.NORMAL)
+                .resizeDimen(R.dimen.post_detail_entry_width, R.dimen.post_detail_entry_width)
+                .into(imageView)
+    }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
