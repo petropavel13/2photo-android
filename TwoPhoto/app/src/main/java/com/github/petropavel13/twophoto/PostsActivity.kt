@@ -13,6 +13,7 @@ import com.github.petropavel13.twophoto.network.LimitedPostsList
 import com.github.petropavel13.twophoto.network.PostsRequest
 import com.octo.android.robospice.persistence.exception.SpiceException
 import com.octo.android.robospice.request.listener.RequestListener
+import com.splunk.mint.Mint
 
 
 public class PostsActivity : SpiceActivity() {
@@ -51,6 +52,9 @@ public class PostsActivity : SpiceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Mint.initAndStartSession(this, "4e4a18ab");
+
         setContentView(R.layout.activity_posts)
 
         val ctx = this

@@ -42,6 +42,7 @@ dependencies {
     compile "com.etsy.android.grid:library:+"
     compile "com.android.support:appcompat-v7:+"
     compile "com.makeramen:roundedimageview:+"
+    compile "com.splunk.mint:mint:4.1"
 }
 buildscript {
     ext.kotlin_version = '0.11.91'
@@ -54,4 +55,7 @@ buildscript {
 }
 repositories {
     mavenCentral()
+    maven {
+        url "https://mint.splunk.com/gradle/"
+    }
 }
