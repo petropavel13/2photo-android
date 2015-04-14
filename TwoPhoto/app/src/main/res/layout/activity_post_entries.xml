@@ -9,7 +9,7 @@
         android:id="@+id/post_entries_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="?android:attr/actionBarSize" />
+        android:minHeight="@dimen/actionBarSize" />
 
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"

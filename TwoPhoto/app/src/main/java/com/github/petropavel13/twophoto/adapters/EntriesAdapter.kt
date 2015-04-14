@@ -1,6 +1,7 @@
 package com.github.petropavel13.twophoto.adapters
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,14 @@ class EntriesAdapter(ctx: Context, entries: List<Post.Entry>): ArrayAdapter<Post
             _items.put(position, this)
 
             return this
+        }
+    }
+
+    fun addAll(items: List<Post.Entry>?) {
+        if (Build.VERSION.SDK_INT >= 11) {
+            super.addAll(items)
+        } else {
+            items?.forEach { super.add(it) }
         }
     }
 
