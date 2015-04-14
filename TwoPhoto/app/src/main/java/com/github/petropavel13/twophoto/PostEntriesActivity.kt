@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import com.github.petropavel13.twophoto.adapters.PostEntriesPagerAdapter
 import com.github.petropavel13.twophoto.model.Post
+import com.splunk.mint.Mint
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import java.util.HashMap
@@ -128,8 +129,9 @@ public class PostEntriesActivity : ActionBarActivity() {
                                     WallpaperManager.getInstance(ctx).setBitmap(bitmap)
 
                                     Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_complete, Toast.LENGTH_LONG).show()
-                                } catch(t: Throwable) {
+                                } catch(e: Exception) {
                                     Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_failed, Toast.LENGTH_LONG).show()
+                                    Mint.logException(e)
                                 }
 
                                 wallpapersTargetsMap.remove(currentItemIndex)
