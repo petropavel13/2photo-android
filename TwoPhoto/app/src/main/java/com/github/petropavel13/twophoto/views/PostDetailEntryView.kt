@@ -56,4 +56,12 @@ class PostDetailEntryView: LinearLayout {
         Picasso.with(getContext())
                 .cancelRequest(imageView)
     }
+
+    fun unloadEntryImage() {
+        imageView?.setImageResource(R.drawable.ic_image_white_48dp)
+    }
+
+    fun loadEntryImage() {
+        loadImage("http://${entry.medium_img_url}")
+    }
 }

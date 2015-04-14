@@ -5,13 +5,13 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.petropavel13.twophoto.R
+import com.github.petropavel13.twophoto.getMemoryClass
 import com.github.petropavel13.twophoto.model.Post
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -22,37 +22,65 @@ import com.squareup.picasso.Target
 
 class EntryView: RelativeLayout {
 
-    constructor(ctx: Context): super(ctx) { }
+    private val isLowMemory: Boolean
 
-    constructor(ctx: Context, attrs: AttributeSet): super(ctx, attrs) { }
+    constructor(ctx: Context): super(ctx) {
+        isLowMemory = getMemoryClass(ctx) < 24
+    }
 
-    constructor(ctx: Context, attrs: AttributeSet, defStyleAttr: Int): super(ctx, attrs, defStyleAttr) { }
+    constructor(ctx: Context, attrs: AttributeSet): super(ctx, attrs) {
+        isLowMemory = getMemoryClass(ctx) < 24
+    }
 
-    constructor(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int): super(ctx, attrs, defStyleAttr, defStyleRes) { }
+    constructor(ctx: Context, attrs: AttributeSet, defStyleAttr: Int): super(ctx, attrs, defStyleAttr) {
+        isLowMemory = getMemoryClass(ctx) < 24
+    }
+
+    constructor(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int): super(ctx, attrs, defStyleAttr, defStyleRes) {
+        isLowMemory = getMemoryClass(ctx) < 24
+    }
 
     var imageView: SubsamplingScaleImageView? = null
     var descriptionTextView: TextView? = null
     var retryView: RetryView? = null
     var progressBar: ProgressBar? = null
 
-    val target = object: Target {
+    var recycled = false
+
+    abstract class EntryTarget(var loadingBigImage: Boolean = false,
+                               var seamlessLoading: Boolean = false): Target
+
+    val target = object: EntryTarget() {
         override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
             imageView?.setImage(ImageSource.bitmap(bitmap))
 
             progressBar?.setVisibility(View.INVISIBLE)
             imageView?.setVisibility(View.VISIBLE)
+            retryView?.setVisibility(View.INVISIBLE)
         }
 
         override fun onBitmapFailed(errorDrawable: Drawable?) {
-            progressBar?.setVisibility(View.INVISIBLE)
-            imageView?.setVisibility(View.INVISIBLE)
-            retryView?.setVisibility(View.VISIBLE)
+            if (loadingBigImage) {
+                // maybe we just don't have enough memory for big one
+                // let's try load small image
+                loadImage("http://${entry.medium_img_url}", bigImage = false, seamlessLoading = true)
+            } else {
+                progressBar?.setVisibility(View.INVISIBLE)
+                imageView?.setVisibility(View.INVISIBLE)
+                retryView?.setVisibility(View.VISIBLE)
+            }
         }
 
         override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-            //
+            retryView?.setVisibility(View.INVISIBLE)
+
+            if(seamlessLoading == false) {
+                progressBar?.setVisibility(View.VISIBLE)
+                imageView?.setVisibility(View.INVISIBLE)
+            }
         }
     }
+
 
     var _showDescriptionText = false
 
@@ -87,6 +115,8 @@ class EntryView: RelativeLayout {
     var entry: Post.Entry
         get() = _entry
         set(newValue) {
+            if(newValue.equals(_entry)) return
+
             _entry = newValue
 
             if(newValue.description.isEmpty()) {
@@ -96,16 +126,41 @@ class EntryView: RelativeLayout {
                 descriptionTextView?.setVisibility(View.VISIBLE)
             }
 
-            loadImage("http://${newValue.big_img_url}")
+            if(isLowMemory) {
+                loadImage("http://${entry.medium_img_url}", bigImage = false)
+            } else {
+                loadImage("http://${entry.big_img_url}")
+            }
         }
 
-    fun loadImage(imageUrl: String) {
-        progressBar?.setVisibility(View.VISIBLE)
-        imageView?.setVisibility(View.INVISIBLE)
-        retryView?.setVisibility(View.INVISIBLE)
+    fun viewWillShow() {
+        if(isLowMemory) {
+            Picasso.with(getContext())
+                    .cancelRequest(target)
 
+            loadImage("http://${entry.big_img_url}", bigImage = true, seamlessLoading = !recycled)
+
+            recycled = false
+        }
+    }
+
+    fun viewWillHide() {
+        if(isLowMemory) {
+            Picasso.with(getContext())
+                    .cancelRequest(target)
+
+            imageView?.recycle()
+
+            recycled = true
+        }
+    }
+
+    fun loadImage(imageUrl: String, bigImage: Boolean = true, seamlessLoading: Boolean = false) {
         Picasso.with(getContext())
                 .cancelRequest(target)
+
+        target.loadingBigImage = bigImage
+        target.seamlessLoading = seamlessLoading
 
         Picasso.with(getContext())
                 .load(imageUrl)
@@ -140,5 +195,7 @@ class EntryView: RelativeLayout {
 
         Picasso.with(getContext())
                 .cancelRequest(target)
+
+        imageView?.recycle()
     }
 }

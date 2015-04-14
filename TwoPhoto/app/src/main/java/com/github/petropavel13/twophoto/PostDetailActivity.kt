@@ -112,4 +112,20 @@ public class PostDetailActivity : SpiceActivity() {
 
         spiceManager.execute(PostRequest(postId), postListener)
     }
+
+    override fun onStop() {
+        super.onStop()
+
+        if(getMemoryClass(this) < 24) {
+            entriesGridView?.getRealAdapter<EntriesAdapter>()?.unloadItemsImages()
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        if(getMemoryClass(this) < 24) {
+            entriesGridView?.getRealAdapter<EntriesAdapter>()?.loadItemsImages()
+        }
+    }
 }

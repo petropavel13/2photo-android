@@ -76,6 +76,12 @@ public class PostEntriesActivity : ActionBarActivity() {
 
                 override fun onPageSelected(position: Int) {
                     toolbar?.setTitle("${position + 1} из ${getAdapter().getCount()}")
+
+                    with(getAdapter() as PostEntriesPagerAdapter) {
+                        this.getViewForAtPosition(position - 1)?.viewWillHide()
+                        this.getViewForAtPosition(position + 1)?.viewWillHide()
+                        this.getViewForAtPosition(position)?.viewWillShow()
+                    }
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
