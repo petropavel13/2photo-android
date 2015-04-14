@@ -101,6 +101,8 @@ public class PostEntriesActivity : ActionBarActivity() {
             // so fallback to actionbar flavor
             setSupportActionBar(this)
         }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -110,6 +112,12 @@ public class PostEntriesActivity : ActionBarActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.getItemId() == android.R.id.home) {
+            finish()
+
+            return super.onOptionsItemSelected(item)
+        }
+
         val ctx = this
 
         val pager = viewPager!!
