@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.petropavel13.twophoto.views.AuthorItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/post_item_attributes_background"
+        android:alpha="0.3" />
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/post_detail_author_avatar_image_view"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            android:maxWidth="100dp"
+            android:paddingRight="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="sensis"
+            android:id="@+id/post_detail_author_name_text_view"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingLeft="4dp" />
+
+    </LinearLayout>
+
+</com.github.petropavel13.twophoto.views.AuthorItemView>

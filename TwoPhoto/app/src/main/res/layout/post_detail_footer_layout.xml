@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Автор"
+        android:gravity="center_horizontal"
+        android:padding="4dp" />
+
+    <include android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:id="@+id/post_detail_footer_author_item_view"
+        layout="@layout/post_detail_author_layout" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Личности"
+        android:layout_gravity="center_horizontal"
+        android:padding="4dp"
+        android:visibility="gone" />
+
+</LinearLayout>

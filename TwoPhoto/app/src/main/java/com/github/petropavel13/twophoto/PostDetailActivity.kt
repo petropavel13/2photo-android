@@ -11,6 +11,7 @@ import com.github.petropavel13.twophoto.extensions.getRealAdapter
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.model.PostDetail
 import com.github.petropavel13.twophoto.network.PostRequest
+import com.github.petropavel13.twophoto.views.AuthorItemView
 import com.github.petropavel13.twophoto.views.RetryView
 import com.octo.android.robospice.persistence.exception.SpiceException
 import com.octo.android.robospice.request.listener.RequestListener
@@ -33,6 +34,8 @@ public class PostDetailActivity : SpiceActivity() {
             titleTextView?.setText(result?.title)
             descriptionTextView?.setText(result?.description)
 
+            authorItemView?.author = result?.author
+
             with(entriesGridView?.getRealAdapter<EntriesAdapter>()) {
                 this?.addAll(result?.entries)
                 this?.notifyDataSetChanged()
@@ -50,6 +53,7 @@ public class PostDetailActivity : SpiceActivity() {
     var entriesGridView: StaggeredGridView? = null
     var loadingProgressBar: ProgressBar? = null
     var retryView: RetryView? = null
+    var authorItemView: AuthorItemView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +80,12 @@ public class PostDetailActivity : SpiceActivity() {
                 descriptionTextView = findViewById(R.id.post_detail_description_text_view) as? TextView
 
                 addHeaderView(this)
+            }
+
+            with(getLayoutInflater().inflate(R.layout.post_detail_footer_layout, null)) {
+                authorItemView = findViewById(R.id.post_detail_footer_author_item_view) as? AuthorItemView
+
+                addFooterView(this)
             }
 
             setAdapter(EntriesAdapter(ctx, emptyList<Post.Entry>()))
