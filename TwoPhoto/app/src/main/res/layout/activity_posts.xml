@@ -1,13 +1,14 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/posts_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.github.petropavel13.twophoto.PostsActivity">
 
-    <ListView
-        android:id="@+id/posts_list_view"
+    <fragment
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:name="com.github.petropavel13.twophoto.fragments.PostsListFragment"
+        android:id="@+id/posts_fragment"
+        tools:layout="@layout/fragment_posts_list" />
+</FrameLayout>
