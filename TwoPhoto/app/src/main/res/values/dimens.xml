@@ -8,4 +8,8 @@
 
     <dimen name="post_detail_entry_width">136dp</dimen>
     <dimen name="post_detail_entry_item_margin">8dp</dimen>
+    <dimen name="author_detail_icon_text_padding">2dp</dimen>
+    <dimen name="author_detail_icon_size">14dp</dimen>
+    <dimen name="author_detail_attributes_padding">8dp</dimen>
+    <dimen name="avatar_max_size">100dp</dimen>
 </resources>

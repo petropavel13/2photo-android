@@ -8,7 +8,6 @@
     <RelativeLayout
         android:layout_width="@dimen/post_item_face_image_width"
         android:layout_height="match_parent"
-        android:paddingLeft="8dp"
         android:paddingTop="8dp"
         android:paddingRight="4dp"
         android:paddingBottom="8dp">

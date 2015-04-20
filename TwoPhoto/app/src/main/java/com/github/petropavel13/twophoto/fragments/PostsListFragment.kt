@@ -20,7 +20,6 @@ import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService
 import com.octo.android.robospice.SpiceManager
 import com.octo.android.robospice.persistence.exception.SpiceException
 import com.octo.android.robospice.request.listener.RequestListener
-import com.octo.android.robospice.request.listener.SpiceServiceListener
 
 public class PostsListFragment : Fragment() {
 
@@ -34,8 +33,6 @@ public class PostsListFragment : Fragment() {
             mPostsFilters = newValue
 
             currentPage = 1
-
-            reload()
         }
 
     private var currentPage = 1
@@ -45,6 +42,12 @@ public class PostsListFragment : Fragment() {
     private var postsRefreshLayout: SwipeRefreshLayout? = null
     private var postsListView: ListView? = null
     private var postsListViewFooter: View? = null
+
+    var pullToRefreshEnabled: Boolean
+        get() = postsRefreshLayout?.isEnabled() ?: false
+        set(newValue) {
+            postsRefreshLayout?.setEnabled(newValue)
+        }
 
     private val postsListener = object: RequestListener<LimitedPostsList> {
         override fun onRequestFailure(spiceException: SpiceException?) {
@@ -61,7 +64,13 @@ public class PostsListFragment : Fragment() {
                 this?.notifyDataSetChanged()
             }
 
+            postsListViewFooter?.setVisibility(View.INVISIBLE)
+
             unfinishedRequest = null
+
+            if (result.next?.isEmpty() ?: true) { // no next page (null or empty)
+                postsListView?.removeFooterView(postsListViewFooter)
+            }
         }
     }
 
@@ -128,7 +137,6 @@ public class PostsListFragment : Fragment() {
                 }
             }
 
-
             postsListView?.addFooterView(postsListViewFooter)
 
             return this
@@ -149,8 +157,6 @@ public class PostsListFragment : Fragment() {
         super.onStart()
 
         spiceManager.start(getActivity())
-
-        spiceManager.execute(PostsRequest(POSTS_PER_PAGE * currentPage, 1, postsFilters), postsListener)
     }
 
     override fun onStop() {

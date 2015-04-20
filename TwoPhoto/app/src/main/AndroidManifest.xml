@@ -30,12 +30,16 @@
             android:name=".PostDetailActivity"
             android:label="@string/title_activity_post_detail" >
         </activity>
-        <!--http://lab.tigerpenguin.com/2014/03/android-bitmap-memory-analysis-part-2.html-->
+        <!-- http://lab.tigerpenguin.com/2014/03/android-bitmap-memory-analysis-part-2.html -->
         <activity
             android:name=".PostEntriesActivity"
             android:hardwareAccelerated="false"
-            android:theme="@style/AppThemeFullScreen"
-            android:label="@string/title_activity_post_entries" >
+            android:label="@string/title_activity_post_entries"
+            android:theme="@style/AppThemeFullScreen" >
+        </activity>
+        <activity
+            android:name=".AuthorDetailActivity"
+            android:label="@string/title_activity_author_detail" >
         </activity>
     </application>
 

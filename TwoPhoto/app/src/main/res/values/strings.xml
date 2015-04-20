@@ -15,4 +15,5 @@
 
     <string name="title_activity_post_detail" translatable="false">PostDetailActivity</string>
     <string name="title_activity_post_entries" translatable="false"></string>
+    <string name="title_activity_author_detail">Profile</string>
 </resources>

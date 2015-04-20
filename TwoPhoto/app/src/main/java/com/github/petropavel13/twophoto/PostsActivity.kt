@@ -22,5 +22,7 @@ public class PostsActivity : FragmentActivity(), PostsListFragment.OnFragmentInt
         Mint.initAndStartSession(this, "4e4a18ab");
 
         setContentView(R.layout.activity_posts)
+
+        (getSupportFragmentManager().findFragmentById(R.id.posts_fragment) as? PostsListFragment)?.reload()
     }
 }

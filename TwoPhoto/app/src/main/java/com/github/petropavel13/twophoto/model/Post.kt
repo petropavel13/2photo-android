@@ -24,10 +24,35 @@ open class Post() {
     [Key] var color: String = ""
     [Key] var face_image_url: String = ""
 
-    public class Author() {
+    open public class Author(): Parcelable {
         [Key] public var id: Int = 0
         [Key] public var name: String = ""
         [Key] public var avatar_url: String = ""
+
+        companion object {
+            val CREATOR: Parcelable.Creator<Author> = object: Parcelable.Creator<Post.Author> {
+                override fun createFromParcel(src: Parcel): Author? {
+                    val me = Author()
+                    me.id = src.readInt()
+                    me.name = src.readString()
+                    me.avatar_url= src.readString()
+
+                    return me
+                }
+
+                override fun newArray(size: Int) = Array(size, { Author() })
+            }
+        }
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) {
+            with(dest) {
+                writeInt(id)
+                writeString(name)
+                writeString(avatar_url)
+            }
+        }
     }
 
     public class Entry(): Parcelable {

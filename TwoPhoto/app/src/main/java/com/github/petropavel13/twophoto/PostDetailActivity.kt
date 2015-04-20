@@ -85,6 +85,12 @@ public class PostDetailActivity : SpiceActivity() {
             with(getLayoutInflater().inflate(R.layout.post_detail_footer_layout, null)) {
                 authorItemView = findViewById(R.id.post_detail_footer_author_item_view) as? AuthorItemView
 
+                authorItemView?.setOnClickListener {
+                    val authorDetailIntent = Intent(ctx, javaClass<AuthorDetailActivity>())
+                    authorDetailIntent.putExtra(AuthorDetailActivity.AUTHOR_KEY, authorItemView!!.author)
+                    startActivity(authorDetailIntent)
+                }
+
                 addFooterView(this)
             }
 
