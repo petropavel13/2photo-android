@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.petropavel13.twophoto.views.PostItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:id="@+id/post_item_face_image_view"
+        android:src="@mipmap/ic_launcher"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="1dp"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="72dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Лучшие цифровые юные фотографы 2009 года (Digital Camera Young Photographer of the Year 2009)"
+            android:id="@+id/post_item_title_text_view"
+            android:paddingTop="4dp"
+            android:paddingRight="4dp"
+            android:paddingLeft="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingBottom="4dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/post_item_attributes_height"
+            android:paddingLeft="8dp"
+            android:id="@+id/post_item_attributes_layout">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_mode_comment_grey600_18dp"
+                android:paddingTop="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="35"
+                android:id="@+id/post_item_comments_count_text_view"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_thumb_up_grey600_18dp"
+                android:paddingTop="4dp"
+                android:paddingLeft="4dp"
+                android:paddingBottom="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="100%"
+                android:id="@+id/post_item_rating_text_view"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="by nik truman"
+                android:id="@+id/post_item_author_text_view"
+                android:paddingRight="8dp"
+                android:paddingLeft="4dp"
+                android:gravity="center_vertical|right"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.github.petropavel13.twophoto.views.PostItemView>

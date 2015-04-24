@@ -12,11 +12,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.github.petropavel13.twophoto.fragments.PostsListFragment
+import com.github.petropavel13.twophoto.fragments.PostsGridFragment
 import com.github.petropavel13.twophoto.model.AuthorDetail
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.network.AuthorRequest
 import com.github.petropavel13.twophoto.network.PostsFilters
+import com.github.petropavel13.twophoto.views.AuthorDetailView
 import com.github.petropavel13.twophoto.views.RetryView
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService
 import com.octo.android.robospice.SpiceManager
@@ -25,7 +26,7 @@ import com.octo.android.robospice.request.listener.RequestListener
 import com.squareup.picasso.Picasso
 
 
-public class AuthorDetailActivity : FragmentActivity(), PostsListFragment.OnFragmentInteractionListener {
+public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFragmentInteractionListener {
     override fun onPostSelected(post: Post) {
         val postDetailIntent = Intent(this, javaClass<PostDetailActivity>())
         postDetailIntent.putExtra(PostDetailActivity.POST_ID_KEY, post.id)
@@ -44,57 +45,24 @@ public class AuthorDetailActivity : FragmentActivity(), PostsListFragment.OnFrag
         override fun onRequestFailure(spiceException: SpiceException?) {
             loadingProgressBar?.setVisibility(View.INVISIBLE)
             retryView?.setVisibility(View.VISIBLE)
-            contentLayout?.setVisibility(View.INVISIBLE)
+
+            postsList?.getView()?.setVisibility(View.INVISIBLE)
         }
 
         override fun onRequestSuccess(result: AuthorDetail) {
-            val fullLocation = (result.country?.isNotEmpty() ?: false) and (result.city?.isNotEmpty() ?: false)
-            val noLocation = (result.country?.isEmpty() ?: true) and (result.city?.isEmpty() ?: true)
-
-            if (fullLocation) {
-                locationTextView?.setText("${result.country}, ${result.city}")
-            } else if (noLocation) {
-                locationLayout?.setVisibility(View.GONE)
-            } else {
-                locationTextView?.setText(result.country ?: result.city)
-            }
-
-            if (result.site?.isNotEmpty() ?: false) {
-                siteTextView?.setText(result.site)
-            } else {
-                siteLayout?.setVisibility(View.GONE)
-            }
-
-            carmaTextView?.setText(result.carma.toString())
-            commentsTextView?.setText(result.number_of_comments.toString())
-            postsTextView?.setText(result.number_of_posts.toString())
-
-            descriptionTextView?.setText(result.description)
+            authorDetailView?.author = result
 
             loadingProgressBar?.setVisibility(View.INVISIBLE)
-            contentLayout?.setVisibility(View.VISIBLE)
+
+            postsList?.getView()?.setVisibility(View.VISIBLE)
         }
     }
 
-    private var avatarImageView: ImageView? = null
-    private var nameTextView: TextView? = null
-
-    private var locationLayout: ViewGroup? = null
-    private var locationTextView: TextView? = null
-
-    private var siteLayout: ViewGroup? = null
-    private var siteTextView: TextView? = null
-
-    private var carmaTextView: TextView? = null
-    private var commentsTextView: TextView? = null
-    private var postsTextView: TextView? = null
-
-    private var descriptionTextView: TextView? = null
+    private var authorDetailView: AuthorDetailView? = null
 
     private var loadingProgressBar: ProgressBar? = null
     private var retryView: RetryView? = null
-    private var contentLayout: LinearLayout? = null
-    private var postsList: PostsListFragment? = null
+    private var postsList: PostsGridFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<FragmentActivity>.onCreate(savedInstanceState)
@@ -123,49 +91,20 @@ public class AuthorDetailActivity : FragmentActivity(), PostsListFragment.OnFrag
             setVisibility(View.INVISIBLE)
         }
 
-        with(findViewById(R.id.author_detail_content_layout) as LinearLayout) {
-            contentLayout = this
+        with(getSupportFragmentManager().findFragmentById(R.id.author_detail_posts_fragment) as PostsGridFragment) {
+            getView().setVisibility(View.INVISIBLE)
 
-            setVisibility(View.INVISIBLE)
-
-            avatarImageView = findViewById(R.id.author_detail_avatar_image_view) as? ImageView
-
-            Picasso.with(getContext())
-                    .load("http://${author.avatar_url}")
-                    .priority(Picasso.Priority.HIGH)
-                    .into(avatarImageView)
-
-            nameTextView = findViewById(R.id.author_detail_name_text_view) as? TextView
-            nameTextView?.setText(author.name)
-        }
-
-        with(getSupportFragmentManager().findFragmentById(R.id.author_detail_posts_fragment) as PostsListFragment) {
             postsList = this
             pullToRefreshEnabled = false
             postsFilters = PostsFilters(authorId = author.id)
+
+            with(getLayoutInflater().inflate(R.layout.author_detail_layout, null) as AuthorDetailView) {
+                authorDetailView = this
+
+                addHeaderView(this)
+            }
+
             reload()
-        }
-
-        with(findViewById(R.id.author_detail_location_layout) as? ViewGroup) {
-            locationLayout = this
-
-            locationTextView = findViewById(R.id.author_detail_location_text_view) as? TextView
-        }
-
-        with(findViewById(R.id.author_detail_site_layout) as? ViewGroup) {
-            siteLayout = this
-
-            siteTextView = findViewById(R.id.author_detail_site_text_view) as? TextView
-        }
-
-        carmaTextView = findViewById(R.id.author_detail_carma_text_view) as? TextView
-        commentsTextView = findViewById(R.id.author_detail_comments_text_view) as? TextView
-        postsTextView = findViewById(R.id.author_detail_posts_text_view) as? TextView
-
-        with(findViewById(R.id.author_detail_description_text_view) as? TextView) {
-            descriptionTextView = this
-
-            this?.setMovementMethod(ScrollingMovementMethod())
         }
 
         spiceManager.execute(AuthorRequest(author.id), authorListener)

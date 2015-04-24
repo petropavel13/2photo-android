@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.petropavel13.twophoto.PostsActivity"
-    android:paddingLeft="16dp">
+    tools:context="com.github.petropavel13.twophoto.PostsActivity">
 
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.github.petropavel13.twophoto.fragments.PostsListFragment"
+        android:name="com.github.petropavel13.twophoto.fragments.PostsGridFragment"
         android:id="@+id/posts_fragment"
-        tools:layout="@layout/fragment_posts_list" />
+        tools:layout="@layout/fragment_posts_grid" />
 </FrameLayout>

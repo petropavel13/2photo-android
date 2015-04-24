@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.petropavel13.twophoto.views.AuthorDetailView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="104dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:layout_width="@dimen/avatar_max_size"
+            android:layout_height="@dimen/avatar_max_size"
+            android:id="@+id/author_detail_avatar_image_view"
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center_vertical"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="sensis"
+                android:id="@+id/author_detail_name_text_view"
+                android:layout_alignParentTop="true" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:id="@+id/author_detail_location_layout"
+                android:layout_below="@+id/author_detail_name_text_view">
+
+                <ImageView
+                    android:layout_width="@dimen/author_detail_icon_size"
+                    android:layout_height="@dimen/author_detail_icon_size"
+                    android:src="@drawable/ic_location_on_grey600_18dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Россия, Москва"
+                    android:id="@+id/author_detail_location_text_view"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="@dimen/author_detail_icon_text_padding" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/author_detail_site_layout"
+                android:paddingTop="4dp"
+                android:layout_below="@+id/author_detail_site_layout">
+
+                <ImageView
+                    android:layout_width="@dimen/author_detail_icon_size"
+                    android:layout_height="@dimen/author_detail_icon_size"
+                    android:src="@drawable/ic_public_grey600_18dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="2photo.ru"
+                    android:id="@+id/author_detail_site_text_view"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="@dimen/author_detail_icon_text_padding" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:layout_gravity="bottom"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:layout_width="@dimen/author_detail_icon_size"
+                    android:layout_height="@dimen/author_detail_icon_size"
+                    android:src="@drawable/ic_yin_yang_grey600_18dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="107273"
+                    android:id="@+id/author_detail_carma_text_view"
+                    android:paddingLeft="@dimen/author_detail_icon_text_padding"
+                    android:layout_gravity="center_vertical" />
+
+                <ImageView
+                    android:layout_width="@dimen/author_detail_icon_size"
+                    android:layout_height="@dimen/author_detail_icon_size"
+                    android:src="@drawable/ic_mode_comment_grey600_18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/author_detail_attributes_padding" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="108"
+                    android:id="@+id/author_detail_comments_text_view"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="@dimen/author_detail_icon_text_padding" />
+
+                <ImageView
+                    android:layout_width="@dimen/author_detail_icon_size"
+                    android:layout_height="@dimen/author_detail_icon_size"
+                    android:src="@drawable/ic_mode_edit_grey600_18dp"
+                    android:layout_marginLeft="@dimen/author_detail_attributes_padding"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="7556"
+                    android:id="@+id/author_detail_posts_text_view"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="@dimen/author_detail_icon_text_padding" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="... Инструкция пользования аплоадером. 1. Название (обязательно поле) тут даем название вашему посту. Можете написать либо просто имя автора выставленных работ, либо указать название проекта. А можно и то и другое. 2. Описание (не обязательное поле) можете дать разъяснение к работам, а можете и пропустить это. 3. В полях Название и Описание (на английском) пишите тут все тоже самое что и в пунктах описаных выше, но только на английском языке. Не знаете как будет на английском, тогда просто скопируйте с русской версии. 4. Автор (не обязательное поле) здесь вы можете проверить, есть ли уже этот автор у нас на сайте. Если же, после поиска аплодера, на вкладке высветится имя того автора, которого вы сейчас заливаете, то выбирете его из списка. Если нет, то пропустите это поле. Совет: проверяйте как на английском языке имя, так и на русском. В конце имени не должно быть пробелов, иначе он не найдет. 5. Метки (обязательное поле) пишите тут слова, которые отождествляют ваши заливаемые работы. Тут есть баг - аплоадер не принимает слова со словом Ё (например слово звезды, он не примет и выдаст ошибку после того, как вы нажмете кнопку добавить и вам придется заливать файлы занова). Даже если вы решите написать слова с буквой Ё, через букву Е - все равно выдаст ошибку. Поэтому старайтесь не использовать их. 6. Источник (не обязательное) тут указываете ссылку на сайт, откуда брали материал, который имеет отношение к автору работ. Либо его офиициальный сайт, либо иные страницы автора. 7. Работы заливаем через обзор здесь вы можете заливать их двумя способами: - первый способ более трудоемкий и занимает больше времени. Это заливка по одному файлу (каждый раз придется открывать занова обзор и указывать путь к файлам) - второй способ более простой. Вам всего лишь надо указать путь к вашему архиву (только zip, иные архивы не принимаются). Дальше ждем, когда архив загрузится в аплоадер. После это можно будет выбрать изображение, которое вы бы хотели, чтобы была превьюшкой к вашему альбому. Также каждому изображению можно дать небольшое пояснение. Оно ограничено в количестве символов, будьте внимательны. 8. Темы (обязательное поле) тут выбираем разделы. Не забывайте после того, как вы нашли нужные вам разделы, нажать на СТРЕЛКУ справа. Чтобы выбрать сразу несколько тем, нужно удерживать кнопку CTRL на клавиатуре, или же добавлять по одной. Решайте сами, как вам удобнее. 9. Добавить последнее, что вам нужно сделать это нажать на эту кнопку. Но прежде, чем вы это сделаете, проверьте все ли правильно. Главное, чтобы было название указано в полях русское и английское, метки, файлы и темы. Дальше, если все прошло удачно, терпеливо ждете, когда ваш пост пройдет модерацию. МОДЕРАЦИЯ Конечно модерация не может быть объективной на все 100 процентов. Но по возможности все достойные работы попадают на главную страницу. Если вдруг вы запостили альбом, а прошло много времени, то вы вполне можете написать в личку админам с просьбой пересмотреть решение. Или же неотмодерированный альбом может оставаться в силу того, что модеры тоже люди и возможно они просто пропустили его в силу человеческого фактора. Критерии модерации: 1. Качество. 2. Креативность, оригинальность. 3. Разрешение файлов не должно быть очень маленьким. Работы меньше 500х500 могут быть отсеяны. Вполне возможно, что даже очень хорошие работы не будут выложены на главную, если они в настолько маленьком разрешении, что невозможно ничего толком рассмотреть. Приемлемым разрешением считается 600х600, 800х533, 683х1024, 1024х683, ну и чем больше тем лучше. 4. Надписи (копирайты) не должны располагаться по середине изображения, и не должны быть на полкартинки. Файлы с копирайтами с ссылками на другие сайты, не имеющие никакого отношения к автору работ, будут удалены сразу. Ищите эти же работы в других местах без этих подписей. 5. Рамки! Наше мнение, если фотография хороша сама по себе, то ей не нужна никакая обертка, если же фотография ужасна, то ей не поможет даже самая красивая рамка. Поэтому, если вдруг вы решили залить работы с ними, будь хоть это маленькая полоска, то результат может оказаться не в вашу пользу при модерации. Только кадр и ничего больше. Совет: при заливке обрезайте их. Делаем исключения, но очень редко. 6. Количество. Желательно заливать не менее 7-10 работ. По одной штуке на главную не выкладываем! Если же файлов больше 100, то желательно заливать их не в один пост, а попытаться разбить либо по жанрам, либо по содержанию, либо, допустим, ч/б в один, цветные - в другой пост. Можем выложить от 3-х штук, если они в большом разрешении и оригинальны."
+        android:id="@+id/author_detail_description_text_view"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+</com.github.petropavel13.twophoto.views.AuthorDetailView>

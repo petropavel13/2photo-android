@@ -4,11 +4,12 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
-import android.widget.ListView
+import com.etsy.android.grid.StaggeredGridView
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.adapters.PostsAdapter
 import com.github.petropavel13.twophoto.extensions.getRealAdapter
@@ -21,7 +22,7 @@ import com.octo.android.robospice.SpiceManager
 import com.octo.android.robospice.persistence.exception.SpiceException
 import com.octo.android.robospice.request.listener.RequestListener
 
-public class PostsListFragment : Fragment() {
+public class PostsGridFragment : Fragment() {
 
     private val spiceManager = SpiceManager(javaClass<Jackson2GoogleHttpClientSpiceService>())
 
@@ -33,15 +34,19 @@ public class PostsListFragment : Fragment() {
             mPostsFilters = newValue
 
             currentPage = 1
+
+            lastPageReached = false
         }
 
     private var currentPage = 1
 
+    private var lastPageReached = false
+
     private var mListener: OnFragmentInteractionListener? = null
 
     private var postsRefreshLayout: SwipeRefreshLayout? = null
-    private var postsListView: ListView? = null
-    private var postsListViewFooter: View? = null
+    private var postsGridView: StaggeredGridView? = null
+    private var loadingMoreFooter: View? = null
 
     var pullToRefreshEnabled: Boolean
         get() = postsRefreshLayout?.isEnabled() ?: false
@@ -57,24 +62,32 @@ public class PostsListFragment : Fragment() {
         }
 
         override fun onRequestSuccess(result: LimitedPostsList) {
+            if (unfinishedRequest == null) return // I have no idea why, but robospice call listener twice
+
             postsRefreshLayout?.setRefreshing(false)
 
-            with(postsListView?.getRealAdapter<PostsAdapter>()) {
+            lastPageReached = result.next?.isEmpty() ?: true // no next page (null or empty)
+
+            if (lastPageReached) {
+                postsGridView?.removeFooterView(loadingMoreFooter)
+            } else {
+                loadingMoreFooter?.setVisibility(View.INVISIBLE)
+            }
+
+            with(postsGridView?.getRealAdapter<PostsAdapter>()) {
                 this?.addAll(result.results)
                 this?.notifyDataSetChanged()
             }
 
-            postsListViewFooter?.setVisibility(View.INVISIBLE)
-
             unfinishedRequest = null
 
-            if (result.next?.isEmpty() ?: true) { // no next page (null or empty)
-                postsListView?.removeFooterView(postsListViewFooter)
-            }
+            currentPage++
         }
     }
 
     private var unfinishedRequest: PostsRequest? = null
+
+    private var wasStopped = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,16 +102,16 @@ public class PostsListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        with(inflater.inflate(R.layout.fragment_posts_list, container, false)) {
+        with(inflater.inflate(R.layout.fragment_posts_grid, container, false)) {
             val ctx = getContext()
 
-            postsListViewFooter = inflater.inflate(R.layout.loading_more_layout, null)
+            loadingMoreFooter = inflater.inflate(R.layout.loading_more_layout, null)
 
             with(findViewById(R.id.posts_refresh_layout) as SwipeRefreshLayout) {
                 postsRefreshLayout = this
 
                 setOnRefreshListener {
-                    postsListViewFooter?.setVisibility(View.GONE)
+                    loadingMoreFooter?.setVisibility(View.GONE)
 
                     currentPage = 1
 
@@ -106,8 +119,10 @@ public class PostsListFragment : Fragment() {
                 }
             }
 
-            with(postsRefreshLayout?.findViewById(R.id.posts_list_view) as ListView) {
-                postsListView = this
+            with(postsRefreshLayout?.findViewById(R.id.posts_grid_view) as StaggeredGridView) {
+                postsGridView = this
+
+                addFooterView(loadingMoreFooter)
 
                 setAdapter(PostsAdapter(ctx, emptyList<Post>()))
 
@@ -116,12 +131,10 @@ public class PostsListFragment : Fragment() {
                     }
 
                     override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-                        if (unfinishedRequest == null && firstVisibleItem + visibleItemCount == totalItemCount - 1) {
-                            postsListViewFooter?.setVisibility(View.VISIBLE)
+                        if (lastPageReached == false && unfinishedRequest == null && firstVisibleItem + visibleItemCount == totalItemCount - 1) {
+                            loadingMoreFooter?.setVisibility(View.VISIBLE)
 
-                            currentPage = totalItemCount / POSTS_PER_PAGE + 1
-
-                            with(PostsRequest(limit=POSTS_PER_PAGE, page=currentPage)) {
+                            with(PostsRequest(limit=POSTS_PER_PAGE, page=currentPage, postsFilters=postsFilters)) {
                                 unfinishedRequest = this
 
                                 spiceManager.execute(this, postsListener)
@@ -131,13 +144,11 @@ public class PostsListFragment : Fragment() {
                 })
 
                 setOnItemClickListener { adapterView, view, i, l ->
-                    val post = adapterView.getRealAdapter<PostsAdapter>()!!.getItem(i)
+                    val post = adapterView.getRealAdapter<PostsAdapter>()!!.getItem(i - getHeaderViewsCount())
 
                     mListener?.onPostSelected(post)
                 }
             }
-
-            postsListView?.addFooterView(postsListViewFooter)
 
             return this
         }
@@ -157,12 +168,20 @@ public class PostsListFragment : Fragment() {
         super.onStart()
 
         spiceManager.start(getActivity())
+
+        if (wasStopped && unfinishedRequest != null) {
+            spiceManager.execute(unfinishedRequest, postsListener)
+
+            wasStopped = false
+        }
     }
 
     override fun onStop() {
         if (spiceManager.isStarted()) {
             spiceManager.shouldStop();
         }
+
+        wasStopped = true
 
         super.onStop()
     }
@@ -188,7 +207,7 @@ public class PostsListFragment : Fragment() {
     }
 
     fun reload() {
-        with(postsListView?.getRealAdapter<PostsAdapter>()) {
+        with(postsGridView?.getRealAdapter<PostsAdapter>()) {
             this?.clear()
             this?.notifyDataSetChanged()
         }
@@ -200,16 +219,27 @@ public class PostsListFragment : Fragment() {
         }
     }
 
+    fun addHeaderView(headerView: View) {
+        val adapter = postsGridView?.getRealAdapter<PostsAdapter>()
+
+        postsGridView?.setAdapter(null)
+
+        postsGridView?.addHeaderView(headerView)
+        postsGridView?.addFooterView(loadingMoreFooter)
+
+        postsGridView?.setAdapter(adapter)
+    }
+
     public trait OnFragmentInteractionListener {
         public fun onPostSelected(post: Post)
     }
 
     companion object {
         val ARG_POSTS_FILTERS = "posts_filters"
-        val POSTS_PER_PAGE = 16
+        val POSTS_PER_PAGE = 32
 
-        public fun newInstance(postsFilters: PostsFilters = PostsFilters()): PostsListFragment {
-            val fragment = PostsListFragment()
+        public fun newInstance(postsFilters: PostsFilters = PostsFilters()): PostsGridFragment {
+            val fragment = PostsGridFragment()
 
             with(Bundle()) {
                 putBundle(ARG_POSTS_FILTERS, postsFilters.bundle)
