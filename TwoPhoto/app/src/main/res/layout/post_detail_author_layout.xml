@@ -21,7 +21,8 @@
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center_vertical"
             android:adjustViewBounds="true"
-            android:maxWidth="100dp"
+            android:maxWidth="@dimen/avatar_max_size"
+            android:minWidth="@dimen/avatar_max_size"
             android:paddingRight="4dp" />
 
         <TextView

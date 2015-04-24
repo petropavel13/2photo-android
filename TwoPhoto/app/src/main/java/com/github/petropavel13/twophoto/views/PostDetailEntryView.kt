@@ -58,7 +58,7 @@ class PostDetailEntryView: LinearLayout {
     }
 
     fun unloadEntryImage() {
-        imageView?.setImageResource(R.drawable.ic_image_white_48dp)
+        imageView?.setImageBitmap(null)
     }
 
     fun loadEntryImage() {

@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.views.EntryView
@@ -49,8 +50,8 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
     }
 
     override fun instantiateItem(container: View?, position: Int): Any? {
-        with(inflater.inflate(R.layout.entry_layout, null) as EntryView) {
-            this.entry = entries[position]
+        with(inflater.inflate(R.layout.entry_layout, container as? ViewGroup, false) as EntryView) {
+            entry = entries[position]
 
             onTapListener = _onEntryTapListener
             showDescriptionText = showEntriesDescription

@@ -10,4 +10,5 @@
     <string name="entry_failed_to_load_image">Не удалось загрузить изображение</string>
     <string name="retry_view_failed_to_load_content">Не удалось загрузить содержимое</string>
     <string name="title_activity_author_detail">Профиль</string>
+    <string name="loading_more_text">Загрузка...</string>
 </resources>
