@@ -43,28 +43,17 @@ public class PostsGridFragment : Fragment() {
     private var lastPageReached = false
 
     private var mListener: OnFragmentInteractionListener? = null
-
-    private var postsRefreshLayout: SwipeRefreshLayout? = null
     private var postsGridView: StaggeredGridView? = null
     private var loadingMoreFooter: View? = null
 
-    var pullToRefreshEnabled: Boolean
-        get() = postsRefreshLayout?.isEnabled() ?: false
-        set(newValue) {
-            postsRefreshLayout?.setEnabled(newValue)
-        }
-
     private val postsListener = object: RequestListener<LimitedPostsList> {
         override fun onRequestFailure(spiceException: SpiceException?) {
-            postsRefreshLayout?.setRefreshing(false)
 
             unfinishedRequest = null
         }
 
         override fun onRequestSuccess(result: LimitedPostsList) {
             if (unfinishedRequest == null) return // I have no idea why, but robospice call listener twice
-
-            postsRefreshLayout?.setRefreshing(false)
 
             lastPageReached = result.next?.isEmpty() ?: true // no next page (null or empty)
 
@@ -107,19 +96,7 @@ public class PostsGridFragment : Fragment() {
 
             loadingMoreFooter = inflater.inflate(R.layout.loading_more_layout, null)
 
-            with(findViewById(R.id.posts_refresh_layout) as SwipeRefreshLayout) {
-                postsRefreshLayout = this
-
-                setOnRefreshListener {
-                    loadingMoreFooter?.setVisibility(View.GONE)
-
-                    currentPage = 1
-
-                    reload()
-                }
-            }
-
-            with(postsRefreshLayout?.findViewById(R.id.posts_grid_view) as StaggeredGridView) {
+            with(findViewById(R.id.posts_grid_view) as StaggeredGridView) {
                 postsGridView = this
 
                 addFooterView(loadingMoreFooter)

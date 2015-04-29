@@ -95,7 +95,6 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
             getView().setVisibility(View.INVISIBLE)
 
             postsList = this
-            pullToRefreshEnabled = false
             postsFilters = PostsFilters(authorId = author.id)
 
             with(getLayoutInflater().inflate(R.layout.author_detail_layout, null) as AuthorDetailView) {
