@@ -3,15 +3,10 @@ package com.github.petropavel13.twophoto
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.text.method.ScrollingMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import com.github.petropavel13.twophoto.fragments.PostsGridFragment
 import com.github.petropavel13.twophoto.model.AuthorDetail
 import com.github.petropavel13.twophoto.model.Post
@@ -23,7 +18,6 @@ import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService
 import com.octo.android.robospice.SpiceManager
 import com.octo.android.robospice.persistence.exception.SpiceException
 import com.octo.android.robospice.request.listener.RequestListener
-import com.squareup.picasso.Picasso
 
 
 public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFragmentInteractionListener {
@@ -46,6 +40,7 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
             loadingProgressBar?.setVisibility(View.INVISIBLE)
             retryView?.setVisibility(View.VISIBLE)
 
+            authorDetailView?.setVisibility(View.INVISIBLE)
             postsList?.getView()?.setVisibility(View.INVISIBLE)
         }
 
@@ -54,6 +49,7 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
 
             loadingProgressBar?.setVisibility(View.INVISIBLE)
 
+            authorDetailView?.setVisibility(View.VISIBLE)
             postsList?.getView()?.setVisibility(View.VISIBLE)
         }
     }
@@ -94,16 +90,18 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
         }
 
         with(getSupportFragmentManager().findFragmentById(R.id.author_detail_posts_fragment) as PostsGridFragment) {
-            getView().setVisibility(View.INVISIBLE)
-
             postsList = this
             postsFilters = PostsFilters(authorId = author.id)
 
             with(getLayoutInflater().inflate(R.layout.author_detail_layout, null) as AuthorDetailView) {
                 authorDetailView = this
 
+                setVisibility(View.INVISIBLE)
+
                 addHeaderView(this)
             }
+
+            getView().setVisibility(View.INVISIBLE)
 
             reload()
         }

@@ -25,9 +25,9 @@ public class PostDetailActivity : SpiceActivity() {
         val POST_ID_KEY ="post_id"
     }
 
-    var postId = 0
+    private var postId = 0
 
-    val postListener = object: RequestListener<PostDetail> {
+    private val postListener = object: RequestListener<PostDetail> {
         override fun onRequestFailure(spiceException: SpiceException?) {
             loadingProgressBar?.setVisibility(View.INVISIBLE)
             headerView?.setVisibility(View.INVISIBLE)
@@ -85,13 +85,15 @@ public class PostDetailActivity : SpiceActivity() {
 
         with(findViewById(R.id.post_detail_entries_grid_view) as StaggeredGridView) {
             entriesGridView = this
-            headerView = this
 
             with(getLayoutInflater().inflate(R.layout.post_detail_header_layout, null)) {
+                headerView = this
                 titleTextView = findViewById(R.id.post_detail_title_text_view) as? TextView
                 descriptionTextView = findViewById(R.id.post_detail_description_text_view) as? TextView
 
                 addHeaderView(this)
+
+                setVisibility(View.INVISIBLE)
             }
 
             with(getLayoutInflater().inflate(R.layout.post_detail_footer_layout, null)) {
@@ -108,6 +110,8 @@ public class PostDetailActivity : SpiceActivity() {
                 tagCloudView = findViewById(R.id.post_detail_tag_cloud_view) as? TagCloudLinkView
 
                 addFooterView(this)
+
+                setVisibility(View.INVISIBLE)
             }
 
             setAdapter(EntriesAdapter(ctx, emptyList<Post.Entry>()))
@@ -125,15 +129,13 @@ public class PostDetailActivity : SpiceActivity() {
             setVisibility(View.GONE)
         }
 
-        titleTextView?.setVisibility(View.GONE)
-        descriptionTextView?.setVisibility(View.GONE)
-
         with(findViewById(R.id.post_detail_retry_view) as RetryView){
             retryView = this
 
             onRetryListener = object: View.OnClickListener{
                 override fun onClick(view: View) {
-                    setVisibility(View.INVISIBLE)
+                    retryView?.setVisibility(View.INVISIBLE)
+                    loadingProgressBar?.setVisibility(View.VISIBLE)
 
                     spiceManager.execute(PostRequest(postId), postListener)
                 }
