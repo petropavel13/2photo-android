@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.Post
@@ -16,7 +17,7 @@ import com.squareup.picasso.Picasso
  * Created by petropavel on 25/03/15.
  */
 
-class PostItemView: LinearLayout {
+class PostItemView: RelativeLayout {
     companion object {
         val LAYOUT_RESOURCE = R.layout.post_grid_item_layout
     }
@@ -82,6 +83,14 @@ class PostItemView: LinearLayout {
         set(newValue) {
             _post = newValue
 
+            Picasso.with(getContext())
+                    .cancelRequest(faceImageView)
+
+            Picasso.with(getContext())
+                    .load("http://${newValue.face_image_url}")
+                    .priority(Picasso.Priority.HIGH)
+                    .into(faceImageView)
+
             val color = Color.parseColor(_post.color)
 
             titleTextView?.setText(newValue.title)
@@ -90,12 +99,5 @@ class PostItemView: LinearLayout {
             commentsCountTextView?.setText(newValue.number_of_comments.toString())
             ratingTextView?.setText("${newValue.rating}%")
 
-            Picasso.with(getContext())
-                    .cancelRequest(faceImageView)
-
-            Picasso.with(getContext())
-                    .load("http://${newValue.face_image_url}")
-                    .priority(Picasso.Priority.HIGH)
-                    .into(faceImageView)
         }
 }

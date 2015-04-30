@@ -19,7 +19,7 @@
             android:layout_gravity="center_vertical"
             android:scaleType="centerCrop" />
 
-        <RelativeLayout
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -137,7 +137,7 @@
                     android:paddingLeft="@dimen/author_detail_icon_text_padding" />
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -84,6 +84,8 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
                 override fun onClick(view: View) {
                     setVisibility(View.INVISIBLE)
 
+                    loadingProgressBar?.setVisibility(View.VISIBLE)
+
                     spiceManager.execute(AuthorRequest(author.id), authorListener)
                 }
             }

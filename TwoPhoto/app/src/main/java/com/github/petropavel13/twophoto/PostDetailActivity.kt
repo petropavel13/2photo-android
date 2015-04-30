@@ -13,6 +13,8 @@ import com.github.petropavel13.twophoto.model.PostDetail
 import com.github.petropavel13.twophoto.network.PostRequest
 import com.github.petropavel13.twophoto.views.AuthorItemView
 import com.github.petropavel13.twophoto.views.RetryView
+import com.ns.developer.tagview.entity.Tag
+import com.ns.developer.tagview.widget.TagCloudLinkView
 import com.octo.android.robospice.persistence.exception.SpiceException
 import com.octo.android.robospice.request.listener.RequestListener
 
@@ -27,33 +29,42 @@ public class PostDetailActivity : SpiceActivity() {
 
     val postListener = object: RequestListener<PostDetail> {
         override fun onRequestFailure(spiceException: SpiceException?) {
+            loadingProgressBar?.setVisibility(View.INVISIBLE)
+            headerView?.setVisibility(View.INVISIBLE)
+            footerView?.setVisibility(View.INVISIBLE)
             retryView?.setVisibility(View.VISIBLE)
         }
 
-        override fun onRequestSuccess(result: PostDetail?) {
-            titleTextView?.setText(result?.title)
-            descriptionTextView?.setText(result?.description)
+        override fun onRequestSuccess(result: PostDetail) {
+            titleTextView?.setText(result.title)
+            descriptionTextView?.setText(result.description)
 
-            authorItemView?.author = result?.author
+            authorItemView?.author = result.author
 
             with(entriesGridView?.getRealAdapter<EntriesAdapter>()) {
-                this?.addAll(result?.entries)
+                this?.addAll(result.entries)
                 this?.notifyDataSetChanged()
             }
 
+            result.tags.map { it.title }.forEachIndexed { i, s -> tagCloudView?.add(Tag(i, s)) }
+            tagCloudView?.drawTags()
+
             loadingProgressBar?.setVisibility(View.INVISIBLE)
-            titleTextView?.setVisibility(View.VISIBLE)
-            descriptionTextView?.setVisibility(View.VISIBLE)
+            headerView?.setVisibility(View.VISIBLE)
+            footerView?.setVisibility(View.VISIBLE)
             entriesGridView?.setVisibility(View.VISIBLE)
         }
     }
 
-    var titleTextView: TextView? = null
-    var descriptionTextView: TextView? = null
-    var entriesGridView: StaggeredGridView? = null
-    var loadingProgressBar: ProgressBar? = null
-    var retryView: RetryView? = null
-    var authorItemView: AuthorItemView? = null
+    private var titleTextView: TextView? = null
+    private var descriptionTextView: TextView? = null
+    private var entriesGridView: StaggeredGridView? = null
+    private var loadingProgressBar: ProgressBar? = null
+    private var retryView: RetryView? = null
+    private var authorItemView: AuthorItemView? = null
+    private var tagCloudView: TagCloudLinkView? = null
+    private var headerView: View? = null
+    private var footerView: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +85,7 @@ public class PostDetailActivity : SpiceActivity() {
 
         with(findViewById(R.id.post_detail_entries_grid_view) as StaggeredGridView) {
             entriesGridView = this
+            headerView = this
 
             with(getLayoutInflater().inflate(R.layout.post_detail_header_layout, null)) {
                 titleTextView = findViewById(R.id.post_detail_title_text_view) as? TextView
@@ -83,6 +95,8 @@ public class PostDetailActivity : SpiceActivity() {
             }
 
             with(getLayoutInflater().inflate(R.layout.post_detail_footer_layout, null)) {
+                footerView = this
+
                 authorItemView = findViewById(R.id.post_detail_footer_author_item_view) as? AuthorItemView
 
                 authorItemView?.setOnClickListener {
@@ -90,6 +104,8 @@ public class PostDetailActivity : SpiceActivity() {
                     authorDetailIntent.putExtra(AuthorDetailActivity.AUTHOR_KEY, authorItemView!!.author)
                     startActivity(authorDetailIntent)
                 }
+
+                tagCloudView = findViewById(R.id.post_detail_tag_cloud_view) as? TagCloudLinkView
 
                 addFooterView(this)
             }

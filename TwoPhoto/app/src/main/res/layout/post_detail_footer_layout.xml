@@ -21,9 +21,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Личности"
+        android:text="Теги"
         android:layout_gravity="center_horizontal"
-        android:padding="4dp"
+        android:padding="4dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/post_item_attributes_background"
+            android:alpha="0.3" />
+
+        <com.ns.developer.tagview.widget.TagCloudLinkView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/post_detail_tag_cloud_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:background="@color/post_item_bg_color"
+            app:isDeletable="false"
+            app:tagLayoutColor="@color/post_item_border_color"
+            app:tagTextSize="12dp"
+            app:tagTextColor="@android:color/primary_text_dark"
+            app:deletableTextSize="8sp"
+            app:deletableTextColor="#ff9acd32"/>
+
+    </FrameLayout>
+
         android:visibility="gone" />
 
 </LinearLayout>
