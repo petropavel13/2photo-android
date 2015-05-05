@@ -31,6 +31,7 @@ public class PostEntriesActivity : AppCompatActivity() {
     companion object {
         val POST_ENTRIES_KEY ="post_entries"
         val SELECTED_ENTRY_INDEX = "selected_entry_index"
+        private val FULLSCREEN_KEY = "fullscreen"
     }
 
     private var viewPager: ViewPager? = null
@@ -72,6 +73,12 @@ public class PostEntriesActivity : AppCompatActivity() {
                 }
             }
 
+            if (savedInstanceState?.getBoolean(FULLSCREEN_KEY, false) ?: false) {
+                getSupportActionBar().hide()
+
+                adapter.showEntriesDescription = false
+            }
+
             setAdapter(adapter)
 
             setCurrentItem(selectedItemIndex)
@@ -103,6 +110,12 @@ public class PostEntriesActivity : AppCompatActivity() {
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        outState?.putBoolean(FULLSCREEN_KEY, getSupportActionBar().isShowing())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

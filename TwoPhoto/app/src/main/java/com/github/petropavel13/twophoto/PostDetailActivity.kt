@@ -8,7 +8,6 @@ import android.widget.TextView
 import com.etsy.android.grid.StaggeredGridView
 import com.github.petropavel13.twophoto.adapters.EntriesAdapter
 import com.github.petropavel13.twophoto.extensions.getRealAdapter
-import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.model.PostDetail
 import com.github.petropavel13.twophoto.network.PostRequest
 import com.github.petropavel13.twophoto.views.AuthorItemView
@@ -30,8 +29,6 @@ public class PostDetailActivity : SpiceActivity() {
     private val postListener = object: RequestListener<PostDetail> {
         override fun onRequestFailure(spiceException: SpiceException?) {
             loadingProgressBar?.setVisibility(View.INVISIBLE)
-            headerView?.setVisibility(View.INVISIBLE)
-            footerView?.setVisibility(View.INVISIBLE)
             retryView?.setVisibility(View.VISIBLE)
         }
 
@@ -41,17 +38,15 @@ public class PostDetailActivity : SpiceActivity() {
 
             authorItemView?.author = result.author
 
-            with(entriesGridView?.getRealAdapter<EntriesAdapter>()) {
-                this?.addAll(result.entries)
-                this?.notifyDataSetChanged()
-            }
-
             result.tags.map { it.title }.forEachIndexed { i, s -> tagCloudView?.add(Tag(i, s)) }
             tagCloudView?.drawTags()
 
+            entriesGridView?.addHeaderView(headerView)
+            entriesGridView?.addFooterView(footerView)
+
+            entriesGridView?.setAdapter(EntriesAdapter(this@PostDetailActivity, result.entries))
+
             loadingProgressBar?.setVisibility(View.INVISIBLE)
-            headerView?.setVisibility(View.VISIBLE)
-            footerView?.setVisibility(View.VISIBLE)
             entriesGridView?.setVisibility(View.VISIBLE)
         }
     }
@@ -68,6 +63,7 @@ public class PostDetailActivity : SpiceActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_post_detail)
 
         with(findViewById(R.id.post_detail_loading_progress_bar) as ProgressBar) {
@@ -90,10 +86,6 @@ public class PostDetailActivity : SpiceActivity() {
                 headerView = this
                 titleTextView = findViewById(R.id.post_detail_title_text_view) as? TextView
                 descriptionTextView = findViewById(R.id.post_detail_description_text_view) as? TextView
-
-                addHeaderView(this)
-
-                setVisibility(View.INVISIBLE)
             }
 
             with(getLayoutInflater().inflate(R.layout.post_detail_footer_layout, null)) {
@@ -102,19 +94,14 @@ public class PostDetailActivity : SpiceActivity() {
                 authorItemView = findViewById(R.id.post_detail_footer_author_item_view) as? AuthorItemView
 
                 authorItemView?.setOnClickListener {
-                    val authorDetailIntent = Intent(ctx, javaClass<AuthorDetailActivity>())
-                    authorDetailIntent.putExtra(AuthorDetailActivity.AUTHOR_KEY, authorItemView!!.author)
-                    startActivity(authorDetailIntent)
+                    with(Intent(ctx, javaClass<AuthorDetailActivity>())) {
+                        putExtra(AuthorDetailActivity.AUTHOR_KEY, authorItemView!!.author)
+                        startActivity(this)
+                    }
                 }
 
                 tagCloudView = findViewById(R.id.post_detail_tag_cloud_view) as? TagCloudLinkView
-
-                addFooterView(this)
-
-                setVisibility(View.INVISIBLE)
             }
-
-            setAdapter(EntriesAdapter(ctx, emptyList<Post.Entry>()))
 
             setOnItemClickListener { adapterView, view, i, l ->
                 with(adapterView.getRealAdapter<EntriesAdapter>()) {
@@ -126,10 +113,10 @@ public class PostDetailActivity : SpiceActivity() {
                 }
             }
 
-            setVisibility(View.GONE)
+            setVisibility(View.INVISIBLE)
         }
 
-        with(findViewById(R.id.post_detail_retry_view) as RetryView){
+        with(findViewById(R.id.post_detail_retry_view) as RetryView) {
             retryView = this
 
             onRetryListener = object: View.OnClickListener{

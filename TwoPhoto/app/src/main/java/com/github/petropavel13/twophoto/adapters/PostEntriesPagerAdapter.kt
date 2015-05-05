@@ -17,9 +17,9 @@ import java.util.HashMap
 
 class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): PagerAdapter() {
 
-    val inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    var _onEntryTapListener: View.OnClickListener? = null
+    private var _onEntryTapListener: View.OnClickListener? = null
 
     var onEntryTapListener: View.OnClickListener?
         get() = _onEntryTapListener
@@ -29,7 +29,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
             _positionViewMap.values().forEach { it.onTapListener = newValue }
         }
 
-    var _showEntriesDescription = true
+    private var _showEntriesDescription = true
 
     var showEntriesDescription: Boolean
         get() = _showEntriesDescription
@@ -39,7 +39,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
             _positionViewMap.values().forEach { it.showDescriptionText = newValue }
         }
 
-    val _positionViewMap = HashMap<Int, EntryView>(3)
+    private val _positionViewMap = HashMap<Int, EntryView>(3)
 
     fun getViewForAtPosition(position: Int): EntryView? = _positionViewMap.get(position)
 
