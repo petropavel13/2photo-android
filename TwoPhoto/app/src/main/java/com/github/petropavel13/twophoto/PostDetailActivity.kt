@@ -150,16 +150,12 @@ public class PostDetailActivity : SpiceActivity() {
     override fun onStop() {
         super.onStop()
 
-        if(getMemoryClass(this) < 24) {
-            entriesGridView?.getRealAdapter<EntriesAdapter>()?.unloadItemsImages()
-        }
+        entriesGridView?.getRealAdapter<EntriesAdapter>()?.unloadItemsImages()
     }
 
     override fun onRestart() {
         super.onRestart()
 
-        if(getMemoryClass(this) < 24) {
-            entriesGridView?.getRealAdapter<EntriesAdapter>()?.loadItemsImages()
-        }
+        entriesGridView?.getRealAdapter<EntriesAdapter>()?.loadItemsImages()
     }
 }

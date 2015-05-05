@@ -1,43 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.github.petropavel13.twophoto.views.EntryView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <com.facebook.drawee.view.SimpleDraweeView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:layout_gravity="center"
-            android:visibility="visible"
-            android:id="@+id/entry_progress_bar" />
-
-        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/entry_image_view"
-            android:visibility="invisible" />
-
-        <include android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/entry_retry_view"
-            layout="@layout/retry_view_layout"
-            android:layout_gravity="center"
-            android:visibility="invisible" />
-
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/entry_image_view"
+        app:actualImageScaleType="fitCenter"
+        app:failureImage="@drawable/ic_error_white_48dp"
+        app:progressBarImage="@drawable/ic_autorenew_white_48dp"
+        app:progressBarAutoRotateInterval="1000"
+        app:retryImage="@drawable/ic_refresh_white_48dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
+        android:text="15-17 лет. Третье место Дыхание Tina Sun, Новая Зеландия"
         android:id="@+id/entry_description_text_view"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:background="?android:colorBackground"
         android:padding="8dp" />
+
 </com.github.petropavel13.twophoto.views.EntryView >

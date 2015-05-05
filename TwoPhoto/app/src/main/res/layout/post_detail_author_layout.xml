@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.github.petropavel13.twophoto.views.AuthorItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,11 +15,11 @@
         android:layout_height="match_parent"
         android:padding="8dp">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/post_detail_author_avatar_image_view"
-            android:src="@mipmap/ic_launcher"
+            app:placeholderImage="@mipmap/ic_launcher"
             android:layout_gravity="center_vertical"
             android:adjustViewBounds="true"
             android:maxWidth="@dimen/avatar_max_size"

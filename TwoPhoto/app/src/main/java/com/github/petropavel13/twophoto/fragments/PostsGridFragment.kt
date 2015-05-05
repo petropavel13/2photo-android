@@ -3,8 +3,6 @@ package com.github.petropavel13.twophoto.fragments
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -146,11 +144,15 @@ public class PostsGridFragment : Fragment() {
 
         spiceManager.start(getActivity())
 
-        if (wasStopped && unfinishedRequest != null) {
-            spiceManager.execute(unfinishedRequest, postsListener)
+        if (wasStopped) {
+            if (unfinishedRequest != null) {
+                spiceManager.execute(unfinishedRequest, postsListener)
+            }
 
-            wasStopped = false
+            postsGridView?.getRealAdapter<PostsAdapter>()?.loadItemsImages()
         }
+
+        wasStopped = false
     }
 
     override fun onStop() {
@@ -161,6 +163,8 @@ public class PostsGridFragment : Fragment() {
         wasStopped = true
 
         super.onStop()
+
+        postsGridView?.getRealAdapter<PostsAdapter>()?.unloadItemsImages()
     }
 
     override fun onDetach() {

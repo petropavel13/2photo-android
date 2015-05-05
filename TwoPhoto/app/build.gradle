@@ -37,11 +37,10 @@ dependencies {
         exclude module: 'xpp3'
         exclude group: 'stax'
     }
-    compile "com.squareup.picasso:picasso:+"
-    compile "com.davemorrissey.labs:subsampling-scale-image-view:+"
+    compile "com.github.chrisbanes.photoview:library:+"
+    compile "com.facebook.fresco:fresco:+"
     compile "com.etsy.android.grid:library:+"
     compile "com.android.support:appcompat-v7:+"
-    compile "com.makeramen:roundedimageview:+"
     compile "com.splunk.mint:mint:4.1"
     compile "com.ns-developer:tagcloudview:+"
 }

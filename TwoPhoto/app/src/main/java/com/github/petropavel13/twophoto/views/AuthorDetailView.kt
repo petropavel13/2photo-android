@@ -1,22 +1,22 @@
 package com.github.petropavel13.twophoto.views
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.AuthorDetail
-import com.squareup.picasso.Picasso
 
 /**
  * Created by petropavel on 22/04/15.
  */
 
 class AuthorDetailView: LinearLayout {
-    private var avatarImageView: ImageView? = null
+    private var avatarImageView: SimpleDraweeView? = null
     private var nameTextView: TextView? = null
 
     private var locationLayout: ViewGroup? = null
@@ -34,7 +34,7 @@ class AuthorDetailView: LinearLayout {
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        avatarImageView = findViewById(R.id.author_detail_avatar_image_view) as? ImageView
+        avatarImageView = findViewById(R.id.author_detail_avatar_image_view) as? SimpleDraweeView
 
         nameTextView = findViewById(R.id.author_detail_name_text_view) as? TextView
 
@@ -74,10 +74,7 @@ class AuthorDetailView: LinearLayout {
         set(newValue) {
             _author = newValue
 
-            Picasso.with(getContext())
-                    .load("http://${newValue.avatar_url}")
-                    .priority(Picasso.Priority.HIGH)
-                    .into(avatarImageView)
+            avatarImageView?.setImageURI(Uri.parse("http://${newValue.avatar_url}"))
 
             nameTextView?.setText(newValue.name)
 

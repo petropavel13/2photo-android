@@ -1,27 +1,26 @@
 package com.github.petropavel13.twophoto.views
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.Post
-import com.squareup.picasso.Picasso
 
 /**
  * Created by petropavel on 14/04/15.
  */
 
 class AuthorItemView: FrameLayout {
-    var avatarImageView: ImageView? = null
+    var avatarImageView: SimpleDraweeView? = null
     var nameTextView: TextView? = null
 
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        avatarImageView = findViewById(R.id.post_detail_author_avatar_image_view) as? ImageView
+        avatarImageView = findViewById(R.id.post_detail_author_avatar_image_view) as? SimpleDraweeView
         nameTextView = findViewById(R.id.post_detail_author_name_text_view) as? TextView
     }
 
@@ -42,12 +41,6 @@ class AuthorItemView: FrameLayout {
 
         nameTextView?.setText(newValue.name)
 
-        Picasso.with(getContext())
-                .cancelRequest(avatarImageView)
-
-        Picasso.with(getContext())
-                .load("http://${newValue.avatar_url}")
-                .priority(Picasso.Priority.LOW)
-                .into(avatarImageView)
+        avatarImageView?.setImageURI(Uri.parse("http://${newValue.avatar_url}"))
     }
 }

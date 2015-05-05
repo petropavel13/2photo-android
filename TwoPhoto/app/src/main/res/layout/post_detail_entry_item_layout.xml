@@ -5,15 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:layout_width="@dimen/post_detail_entry_width"
         android:layout_height="@dimen/post_detail_entry_width"
         android:id="@+id/post_detail_entry_image_view"
-        android:src="@mipmap/ic_launcher"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        app:riv_corner_radius="4dip"
-        app:riv_border_width="2dip"
-        app:riv_border_color="#333333"/>
+        app:failureImage="@drawable/ic_error_white_48dp"
+        app:progressBarImage="@drawable/ic_autorenew_white_48dp"
+        app:progressBarAutoRotateInterval="1000"
+        app:roundTopLeft="true"
+        app:roundTopRight="true"
+        app:roundBottomLeft="true"
+        app:roundBottomRight="true"
+        app:roundedCornerRadius="4dip"
+        app:roundingBorderWidth="2dip"
+        app:roundingBorderColor="#333333" />
 
 </com.github.petropavel13.twophoto.views.PostDetailEntryView>

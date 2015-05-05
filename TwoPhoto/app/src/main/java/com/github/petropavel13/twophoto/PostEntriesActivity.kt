@@ -2,37 +2,43 @@ package com.github.petropavel13.twophoto
 
 import android.app.WallpaperManager
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.support.v4.view.ViewPager
-import android.support.v7.app.ActionBarActivity
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.facebook.common.executors.CallerThreadExecutor
+import com.facebook.common.references.CloseableReference
+import com.facebook.datasource.DataSource
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber
+import com.facebook.imagepipeline.image.CloseableImage
+import com.facebook.imagepipeline.request.ImageRequest
 import com.github.petropavel13.twophoto.adapters.PostEntriesPagerAdapter
 import com.github.petropavel13.twophoto.model.Post
 import com.splunk.mint.Mint
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
-import java.util.HashMap
+import java.util.HashSet
 
 
-public class PostEntriesActivity : ActionBarActivity() {
+public class PostEntriesActivity : AppCompatActivity() {
 
     companion object {
         val POST_ENTRIES_KEY ="post_entries"
         val SELECTED_ENTRY_INDEX = "selected_entry_index"
     }
 
-    var viewPager: ViewPager? = null
-    var toolbar: Toolbar? = null
-    val wallpapersTargetsMap = HashMap<Int, Target>()
-    val downloadsTargetsMap = HashMap<Int, Target>()
+    private var viewPager: ViewPager? = null
+    private var toolbar: Toolbar? = null
+    private val wallpapersInProgress = HashSet<Int>()
+    private val downloadsInProgress = HashSet<Int>()
 
-    var postId = 0
+    private var postId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,12 +83,6 @@ public class PostEntriesActivity : ActionBarActivity() {
 
                 override fun onPageSelected(position: Int) {
                     toolbar?.setTitle("${position + 1} из ${getAdapter().getCount()}")
-
-                    with(getAdapter() as PostEntriesPagerAdapter) {
-                        this.getViewForAtPosition(position - 1)?.viewWillHide()
-                        this.getViewForAtPosition(position + 1)?.viewWillHide()
-                        this.getViewForAtPosition(position)?.viewWillShow()
-                    }
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
@@ -130,69 +130,73 @@ public class PostEntriesActivity : ActionBarActivity() {
         if(entry != null) {
             when(item?.getItemId()) {
                 R.id.menu_post_entries_action_set_wallpaper -> {
-                    if(wallpapersTargetsMap.containsKey(currentItemIndex) == false) {
-                        val target = object: Target {
-                            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                                try {
-                                    WallpaperManager.getInstance(ctx).setBitmap(bitmap)
+                    if(wallpapersInProgress.contains(currentItemIndex) == false) {
+                        wallpapersInProgress.add(currentItemIndex)
 
-                                    Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_complete, Toast.LENGTH_LONG).show()
-                                } catch(e: Exception) {
-                                    Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_failed, Toast.LENGTH_LONG).show()
-                                    Mint.logException(e)
-                                }
+                        Fresco.getImagePipeline()
+                                .fetchDecodedImage(ImageRequest.fromUri("http://${entry.big_img_url}"), null)
+                                .subscribe(object: BaseBitmapDataSubscriber() {
+                                    override fun onNewResultImpl(bitmap: Bitmap?) {
+                                        var completed = false
 
-                                wallpapersTargetsMap.remove(currentItemIndex)
-                            }
+                                        try {
+                                            WallpaperManager.getInstance(ctx).setBitmap(bitmap)
+                                            completed = true
+                                        } catch(e: Exception) {
+                                            Mint.logException(e)
+                                        }
 
-                            override fun onBitmapFailed(errorDrawable: Drawable?) {
-                                Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_failed, Toast.LENGTH_LONG).show()
+                                        Handler(Looper.getMainLooper()).post {
+                                            if(completed) {
+                                                Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_complete, Toast.LENGTH_LONG).show()
+                                            } else {
+                                                Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_failed, Toast.LENGTH_LONG).show()
+                                            }
+                                        }
 
-                                wallpapersTargetsMap.remove(currentItemIndex)
-                            }
+                                        wallpapersInProgress.remove(currentItemIndex)
+                                    }
 
-                            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                            }
+                                    override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+                                        Handler(Looper.getMainLooper()).post {
+                                            Toast.makeText(ctx, R.string.post_entries_action_set_wallpaper_failed, Toast.LENGTH_LONG).show()
+                                        }
 
-                        }
-
-                        wallpapersTargetsMap.put(currentItemIndex, target)
-
-                        Picasso.with(ctx)
-                                .load("http://${entry!!.big_img_url}")
-                                .into(target)
+                                        wallpapersInProgress.remove(currentItemIndex)
+                                    }
+                                }, CallerThreadExecutor.getInstance())
                     }
                 }
 
                 R.id.menu_post_entries_action_download_picture -> {
-                    if(downloadsTargetsMap.containsKey(currentItemIndex) == false) {
-                        val target = object: Target {
-                            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                                if(MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "2photo-$postId-${entry.id}", entry.description) != null) {
-                                    Toast.makeText(ctx, R.string.post_entries_action_download_picture_complete, Toast.LENGTH_LONG).show()
-                                } else {
-                                    Toast.makeText(ctx, R.string.post_entries_action_download_picture_failed, Toast.LENGTH_LONG).show()
-                                }
+                    if(downloadsInProgress.contains(currentItemIndex) == false) {
+                        downloadsInProgress.add(currentItemIndex)
 
-                                downloadsTargetsMap.remove(currentItemIndex)
-                            }
+                        Fresco.getImagePipeline()
+                                .fetchDecodedImage(ImageRequest.fromUri("http://${entry.big_img_url}"), null)
+                                .subscribe(object: BaseBitmapDataSubscriber() {
+                                    override fun onNewResultImpl(bitmap: Bitmap?) {
+                                        val completed = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "2photo-$postId-${entry.id}", entry.description) != null
 
-                            override fun onBitmapFailed(errorDrawable: Drawable?) {
-                                Toast.makeText(ctx, R.string.post_entries_action_download_picture_failed, Toast.LENGTH_LONG).show()
+                                        Handler(Looper.getMainLooper()).post {
+                                            if(completed) {
+                                                Toast.makeText(ctx, R.string.post_entries_action_download_picture_complete, Toast.LENGTH_LONG).show()
+                                            } else {
+                                                Toast.makeText(ctx, R.string.post_entries_action_download_picture_failed, Toast.LENGTH_LONG).show()
+                                            }
+                                        }
 
-                                downloadsTargetsMap.remove(currentItemIndex)
-                            }
+                                        downloadsInProgress.remove(currentItemIndex)
+                                    }
 
-                            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                            }
+                                    override fun onFailureImpl(dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+                                        Handler(Looper.getMainLooper()).post {
+                                            Toast.makeText(ctx, R.string.post_entries_action_download_picture_failed, Toast.LENGTH_LONG).show()
+                                        }
 
-                        }
-
-                        Picasso.with(ctx)
-                                .load("http://${entry!!.big_img_url}")
-                                .into(target)
-
-                        downloadsTargetsMap.put(currentItemIndex, target)
+                                        downloadsInProgress.remove(currentItemIndex)
+                                    }
+                                }, CallerThreadExecutor.getInstance())
                     }
                 }
             }

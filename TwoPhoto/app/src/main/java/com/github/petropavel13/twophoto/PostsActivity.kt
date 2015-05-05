@@ -3,6 +3,7 @@ package com.github.petropavel13.twophoto
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.github.petropavel13.twophoto.fragments.PostsGridFragment
 import com.github.petropavel13.twophoto.model.Post
 import com.splunk.mint.Mint
@@ -20,6 +21,8 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
         super<FragmentActivity>.onCreate(savedInstanceState)
 
         Mint.initAndStartSession(this, "4e4a18ab");
+
+        Fresco.initialize(this)
 
         setContentView(R.layout.activity_posts)
 
