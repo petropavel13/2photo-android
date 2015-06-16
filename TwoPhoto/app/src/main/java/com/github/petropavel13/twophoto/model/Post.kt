@@ -3,31 +3,67 @@ package com.github.petropavel13.twophoto.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.api.client.util.Key
+import com.j256.ormlite.field.DatabaseField
+import com.j256.ormlite.table.DatabaseTable
 
 /**
  * Created by petropavel on 23/03/15.
  */
 
 open class Post() {
-    [Key] var entries = emptyList<Entry>()
-    [Key] var artists = emptyList<Artist>()
-    [Key] var tags: List<Tag> = emptyList<Tag>()
-    [Key] var categories = emptyList<Category>()
-    [Key] var author = Author()
-    [Key] var number_of_comments: Int = 0
-    [Key] var id: Int = 0
-    [Key] var title: String = ""
-    [Key] var description: String = ""
-    [Key] var link: String = ""
-    [Key] var date: String = ""
-    [Key] var rating: Int = 0
-    [Key] var color: String = ""
-    [Key] var face_image_url: String = ""
+    Key
+    var entries = emptyList<Entry>()
 
+    Key
+    var artists = emptyList<Artist>()
+
+    Key
+    var tags = emptyList<Tag>()
+
+    Key
+    var categories = emptyList<Category>()
+
+    Key DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
+    var author = Author()
+
+    Key DatabaseField(canBeNull = false)
+    var number_of_comments: Int = 0
+
+    Key DatabaseField(id = true)
+    var id: Int = 0
+
+    Key DatabaseField(canBeNull = false)
+    var title: String = ""
+
+    Key DatabaseField
+    var description: String? = null
+
+    Key DatabaseField
+    var link: String? = null
+
+    Key DatabaseField(canBeNull = false)
+    var date: String = ""
+
+    Key DatabaseField(canBeNull = false)
+    var rating: Int = 0
+
+    Key DatabaseField(canBeNull = false)
+    var color: String = ""
+
+    Key DatabaseField(canBeNull = false)
+    var face_image_url: String = ""
+
+
+    DatabaseTable(tableName = "authors")
     open public class Author(): Parcelable {
-        [Key] public var id: Int = 0
-        [Key] public var name: String = ""
-        [Key] public var avatar_url: String = ""
+        Key DatabaseField(id = true)
+        public var id: Int = 0
+
+        Key DatabaseField(canBeNull = false)
+        public var name: String = ""
+
+        Key DatabaseField(canBeNull = false)
+        public var avatar_url: String = ""
 
         companion object {
             val CREATOR: Parcelable.Creator<Author> = object: Parcelable.Creator<Post.Author> {
@@ -55,13 +91,29 @@ open class Post() {
         }
     }
 
+
+    DatabaseTable(tableName = "entries")
     public class Entry(): Parcelable {
-        [Key] public var id: Int = 0
-        [Key] public var big_img_url: String = ""
-        [Key] public var medium_img_url: String = ""
-        [Key] public var description: String = ""
-        [Key] public var rating: Int = 0
-        [Key] public var order: Int = 0
+        DatabaseField(foreign = true, canBeNull = false)
+        public var dbPost: PostDetail = PostDetail()
+
+        Key DatabaseField(id = true)
+        public var id: Int = 0
+
+        Key DatabaseField(canBeNull = false)
+        public var big_img_url: String = ""
+
+        Key DatabaseField(canBeNull = false)
+        public var medium_img_url: String = ""
+
+        Key DatabaseField
+        public var description: String? = null
+
+        Key DatabaseField(canBeNull = false)
+        public var rating: Int = 0
+
+        Key DatabaseField(canBeNull = false)
+        public var order: Int = 0
 
         companion object {
             val CREATOR: Parcelable.Creator<Entry> = object: Parcelable.Creator<Post.Entry> {
@@ -95,19 +147,36 @@ open class Post() {
         }
     }
 
+
+    DatabaseTable(tableName = "artists")
     public class Artist() {
-        [Key] public var id: Int = 0
-        [Key] public var name: String = ""
-        [Key] public var avatar_url: String = ""
+        Key DatabaseField(id = true)
+        public var id: Int = 0
+
+        Key DatabaseField(canBeNull = false)
+        public var name: String = ""
+
+        Key DatabaseField(canBeNull = false)
+        public var avatar_url: String = ""
     }
 
+
+    DatabaseTable(tableName = "categories")
     public class Category() {
-        [Key] public var id: Int = 0
-        [Key] public var title: String = ""
+        Key DatabaseField(id = true)
+        public var id: Int = 0
+
+        Key DatabaseField(canBeNull = false)
+        public var title: String = ""
     }
 
+
+    DatabaseTable(tableName = "tags")
     public class Tag() {
-        [Key] public var id: Int = 0
-        [Key] public var title: String = ""
+        Key DatabaseField(id = true)
+        public var id: Int = 0
+
+        Key DatabaseField(canBeNull = false)
+        public var title: String = ""
     }
 }

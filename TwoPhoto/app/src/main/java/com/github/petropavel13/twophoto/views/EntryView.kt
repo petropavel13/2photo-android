@@ -50,7 +50,7 @@ class EntryView: RelativeLayout {
         set(newValue) {
             _showDescriptionText = newValue
 
-            if(showDescriptionText && entry.description.isEmpty() == false) {
+            if(showDescriptionText && entry.description?.isEmpty() == false) {
                 descriptionTextView?.setVisibility(View.VISIBLE)
             } else {
                 descriptionTextView?.setVisibility(View.INVISIBLE)
@@ -80,7 +80,7 @@ class EntryView: RelativeLayout {
         set(newValue) {
             _entry = newValue
 
-            if(newValue.description.isEmpty()) {
+            if(newValue.description?.isEmpty() == true) {
                 descriptionTextView?.setVisibility(View.GONE)
             } else {
                 descriptionTextView?.setText(newValue.description)

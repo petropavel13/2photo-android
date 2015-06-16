@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context="com.github.petropavel13.twophoto.PostsActivity">
 
-    <fragment
+    <android.support.v4.view.ViewPager
+        android:id="@+id/posts_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.github.petropavel13.twophoto.fragments.PostsGridFragment"
-        android:id="@+id/posts_fragment"
-        tools:layout="@layout/fragment_posts_grid" />
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/posts_pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.v4.view.ViewPager>
+
 </FrameLayout>

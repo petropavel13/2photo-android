@@ -12,6 +12,7 @@ import com.github.petropavel13.twophoto.model.AuthorDetail
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.network.AuthorRequest
 import com.github.petropavel13.twophoto.network.PostsFilters
+import com.github.petropavel13.twophoto.sources.SpicePostsDataSource
 import com.github.petropavel13.twophoto.views.AuthorDetailView
 import com.github.petropavel13.twophoto.views.RetryView
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService
@@ -28,10 +29,15 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
         }
     }
 
+    override fun onError(e: Exception) {
+        // TODO: handle somehow
+    }
+
     private val spiceManager = SpiceManager(javaClass<Jackson2GoogleHttpClientSpiceService>())
 
     companion object {
         val AUTHOR_KEY = "author"
+        private val POST_PER_PAGE = 32
     }
 
     private var author = Post.Author()
@@ -93,6 +99,7 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
         with(getSupportFragmentManager().findFragmentById(R.id.author_detail_posts_fragment) as PostsGridFragment) {
             postsList = this
             postsFilters = PostsFilters(authorId = author.id)
+            postsPerPage = POST_PER_PAGE
 
             with(getLayoutInflater().inflate(R.layout.author_detail_layout, null) as AuthorDetailView) {
                 authorDetailView = this
@@ -101,6 +108,8 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
 
                 addHeaderView(this)
             }
+
+            postsDataSource = SpicePostsDataSource(spiceManager, POST_PER_PAGE)
 
             getView().setVisibility(View.INVISIBLE)
 

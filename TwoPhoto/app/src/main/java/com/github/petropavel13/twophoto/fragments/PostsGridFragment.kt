@@ -14,15 +14,12 @@ import com.github.petropavel13.twophoto.extensions.getRealAdapter
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.network.LimitedPostsList
 import com.github.petropavel13.twophoto.network.PostsFilters
-import com.github.petropavel13.twophoto.network.PostsRequest
-import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService
-import com.octo.android.robospice.SpiceManager
-import com.octo.android.robospice.persistence.exception.SpiceException
-import com.octo.android.robospice.request.listener.RequestListener
+import com.github.petropavel13.twophoto.sources.DataSource
+import com.github.petropavel13.twophoto.sources.PostsDataSource
+import kotlin.properties.Delegates
 
-public class PostsGridFragment : Fragment() {
-
-    private val spiceManager = SpiceManager(javaClass<Jackson2GoogleHttpClientSpiceService>())
+public class PostsGridFragment : Fragment(), DataSource.ResponseListener<LimitedPostsList> {
+    var postsDataSource: PostsDataSource by Delegates.notNull()
 
     private var mPostsFilters = PostsFilters()
 
@@ -31,12 +28,14 @@ public class PostsGridFragment : Fragment() {
         set(newValue) {
             mPostsFilters = newValue
 
-            currentPage = 1
+            currentOffset = 0
 
             lastPageReached = false
         }
 
-    private var currentPage = 1
+    var postsPerPage: Int by Delegates.notNull()
+
+    private var currentOffset = 0
 
     private var lastPageReached = false
 
@@ -44,46 +43,17 @@ public class PostsGridFragment : Fragment() {
     private var postsGridView: StaggeredGridView? = null
     private var loadingMoreFooter: View? = null
 
-    private val postsListener = object: RequestListener<LimitedPostsList> {
-        override fun onRequestFailure(spiceException: SpiceException?) {
-
-            unfinishedRequest = null
-        }
-
-        override fun onRequestSuccess(result: LimitedPostsList) {
-            if (unfinishedRequest == null) return // I have no idea why, but robospice call listener twice
-
-            lastPageReached = result.next?.isEmpty() ?: true // no next page (null or empty)
-
-            if (lastPageReached) {
-                postsGridView?.removeFooterView(loadingMoreFooter)
-            } else {
-                loadingMoreFooter?.setVisibility(View.INVISIBLE)
-            }
-
-            with(postsGridView?.getRealAdapter<PostsAdapter>()) {
-                this?.addAll(result.results)
-                this?.notifyDataSetChanged()
-            }
-
-            unfinishedRequest = null
-
-            currentPage++
-        }
-    }
-
-    private var unfinishedRequest: PostsRequest? = null
-
     private var wasStopped = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super<Fragment>.onCreate(savedInstanceState)
 
         val arguments = getArguments()
 
         if (arguments != null) {
             if (arguments.containsKey(ARG_POSTS_FILTERS)) {
                 mPostsFilters = PostsFilters(arguments.getBundle(ARG_POSTS_FILTERS))
+                postsPerPage = arguments.getInt(ARG_POSTS_PER_PAGE)
             }
         }
     }
@@ -106,14 +76,10 @@ public class PostsGridFragment : Fragment() {
                     }
 
                     override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-                        if (lastPageReached == false && unfinishedRequest == null && firstVisibleItem + visibleItemCount == totalItemCount - 1) {
+                        if (lastPageReached == false && firstVisibleItem + visibleItemCount == totalItemCount - 1) {
                             loadingMoreFooter?.setVisibility(View.VISIBLE)
 
-                            with(PostsRequest(limit=POSTS_PER_PAGE, page=currentPage, postsFilters=postsFilters)) {
-                                unfinishedRequest = this
-
-                                spiceManager.execute(this, postsListener)
-                            }
+                            postsDataSource.requestList(this@PostsGridFragment, postsFilters, postsPerPage, currentOffset)
                         }
                     }
                 })
@@ -129,25 +95,42 @@ public class PostsGridFragment : Fragment() {
         }
     }
 
+    override fun onResponse(result: LimitedPostsList) {
+        lastPageReached = result.next?.isEmpty() ?: true // no next page (null or empty)
+
+        if (lastPageReached) {
+            postsGridView?.removeFooterView(loadingMoreFooter)
+        } else {
+            loadingMoreFooter?.setVisibility(View.INVISIBLE)
+        }
+
+        with(postsGridView?.getRealAdapter<PostsAdapter>()) {
+            this?.addAll(result.results)
+            this?.notifyDataSetChanged()
+        }
+
+        currentOffset += result.count
+    }
+
+    override fun onError(exception: Exception) {
+        mListener?.onError(exception)
+    }
+
     override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
+        super<Fragment>.onAttach(activity)
 
         try {
             mListener = activity as OnFragmentInteractionListener
         } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener")
+            throw ClassCastException(activity.toString() + " must implement ${ javaClass<OnFragmentInteractionListener>().getSimpleName() }")
         }
     }
 
     override fun onStart() {
-        super.onStart()
-
-        spiceManager.start(getActivity())
+        super<Fragment>.onStart()
 
         if (wasStopped) {
-            if (unfinishedRequest != null) {
-                spiceManager.execute(unfinishedRequest, postsListener)
-            }
+            postsDataSource.retryUnfinishedRequest()
 
             postsGridView?.getRealAdapter<PostsAdapter>()?.loadItemsImages()
         }
@@ -156,34 +139,34 @@ public class PostsGridFragment : Fragment() {
     }
 
     override fun onStop() {
-        if (spiceManager.isStarted()) {
-            spiceManager.shouldStop();
-        }
+        postsDataSource.stopRequest()
 
         wasStopped = true
 
-        super.onStop()
+        super<Fragment>.onStop()
 
         postsGridView?.getRealAdapter<PostsAdapter>()?.unloadItemsImages()
     }
 
     override fun onDetach() {
-        super.onDetach()
+        super<Fragment>.onDetach()
 
         mListener = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
+        super<Fragment>.onSaveInstanceState(outState)
 
         outState.putBundle(ARG_POSTS_FILTERS, postsFilters.bundle)
+        outState.putInt(ARG_POSTS_PER_PAGE, postsPerPage)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        super<Fragment>.onActivityCreated(savedInstanceState)
 
         if(savedInstanceState != null) {
             postsFilters = PostsFilters(savedInstanceState.getBundle(ARG_POSTS_FILTERS))
+            postsPerPage = savedInstanceState.getInt(ARG_POSTS_PER_PAGE)
         }
     }
 
@@ -193,11 +176,7 @@ public class PostsGridFragment : Fragment() {
             this?.notifyDataSetChanged()
         }
 
-        with(PostsRequest(POSTS_PER_PAGE * currentPage, 1, postsFilters)) {
-            unfinishedRequest = this
-
-            spiceManager.execute(this, postsListener)
-        }
+        postsDataSource.requestList(this, postsFilters, postsPerPage, currentOffset)
     }
 
     fun addHeaderView(headerView: View) {
@@ -211,22 +190,27 @@ public class PostsGridFragment : Fragment() {
         postsGridView?.setAdapter(adapter)
     }
 
-    public trait OnFragmentInteractionListener {
+    public interface OnFragmentInteractionListener {
         public fun onPostSelected(post: Post)
+        public fun onError(e: Exception)
     }
 
     companion object {
-        val ARG_POSTS_FILTERS = "posts_filters"
-        val POSTS_PER_PAGE = 32
+        private val ARG_POSTS_FILTERS = "posts_filters"
+        private val ARG_POSTS_PER_PAGE = "posts_per_page"
 
-        public fun newInstance(postsFilters: PostsFilters = PostsFilters()): PostsGridFragment {
+        public fun newInstance(postsDataSource: PostsDataSource, postsPerPage: Int, postsFilters: PostsFilters = PostsFilters()): PostsGridFragment {
             val fragment = PostsGridFragment()
 
             with(Bundle()) {
                 putBundle(ARG_POSTS_FILTERS, postsFilters.bundle)
+                putInt(ARG_POSTS_PER_PAGE, postsPerPage)
 
                 fragment.setArguments(this)
             }
+
+            fragment.postsDataSource = postsDataSource
+            fragment.postsPerPage = postsPerPage
 
             return fragment
         }

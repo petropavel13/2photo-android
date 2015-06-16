@@ -1,7 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
     android:paddingTop="0dp"
     android:paddingBottom="0dp"
     tools:context="com.github.petropavel13.twophoto.PostDetailActivity">
@@ -19,15 +20,30 @@
         layout="@layout/retry_view_layout"
         android:layout_gravity="center" />
 
-    <com.etsy.android.grid.StaggeredGridView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/post_detail_entries_grid_view"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        app:item_margin="@dimen/post_detail_entry_item_margin"
-        app:column_count_portrait="@integer/entries_grid_column_count_portrait"
-        app:column_count_landscape="@integer/entries_grid_column_count_landscape" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/post_detail_toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?android:attr/actionBarSize" />
+
+        <com.etsy.android.grid.StaggeredGridView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/post_detail_entries_grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            app:item_margin="@dimen/post_detail_entry_item_margin"
+            app:column_count_portrait="@integer/entries_grid_column_count_portrait"
+            app:column_count_landscape="@integer/entries_grid_column_count_landscape" />
+
+    </LinearLayout>
 
 </FrameLayout>

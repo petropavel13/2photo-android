@@ -2,6 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.github.petropavel13.twophoto.PostDetailActivity">
-    <item android:id="@+id/action_settings" android:title=""
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/menu_post_detail_action_save_post" android:title="@string/post_detail_action_save_post"
+        android:orderInCategory="100" android:visible="false" app:showAsAction="withText|always" android:icon="@drawable/ic_file_download_white_24dp" />
+    <item android:id="@+id/menu_post_detail_action_remove_post" android:title="@string/post_detail_action_remove_post"
+        android:orderInCategory="100" android:visible="false" app:showAsAction="withText|always" android:icon="@drawable/ic_highlight_remove_white_24dp" />
 </menu>

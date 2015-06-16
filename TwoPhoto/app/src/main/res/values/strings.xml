@@ -5,16 +5,20 @@
     <string name="post_entries_action_set_wallpaper_complete">New wallpaper was set</string>
     <string name="post_entries_action_set_wallpaper_failed">Failed to set new wallpaper</string>
 
-    <string name="post_entries_action_download_picture">Download</string>
-    <string name="post_entries_action_download_picture_complete">Download picture complete</string>
-    <string name="post_entries_action_download_picture_failed">Failed to download picture</string>
+    <string name="post_entries_action_download_picture">Save the image to gallery</string>
+    <string name="post_entries_action_download_picture_complete">The image was successfully saved to the gallery</string>
+    <string name="post_entries_action_download_picture_failed">Unable to save the image in the gallery</string>
 
     <string name="entry_failed_to_load_image">Failed to load image</string>
 
     <string name="retry_view_failed_to_load_content">Failed to load content</string>
 
-    <string name="title_activity_post_detail" translatable="false">PostDetailActivity</string>
+    <string name="title_activity_post_detail">Post</string>
     <string name="title_activity_post_entries" translatable="false"></string>
     <string name="title_activity_author_detail">Profile</string>
     <string name="loading_more_text">Loading...</string>
+    <string name="posts_feed">All posts</string>
+    <string name="posts_favorites">Favorite posts</string>
+    <string name="post_detail_action_save_post">Save post</string>
+    <string name="post_detail_action_remove_post">Remove post</string>
 </resources>
