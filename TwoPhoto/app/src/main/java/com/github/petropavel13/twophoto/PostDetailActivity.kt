@@ -14,9 +14,7 @@ import android.widget.Toast
 import com.etsy.android.grid.StaggeredGridView
 import com.github.petropavel13.twophoto.adapters.EntriesAdapter
 import com.github.petropavel13.twophoto.db.DatabaseOpenHelper
-import com.github.petropavel13.twophoto.extensions.createInDatabase
-import com.github.petropavel13.twophoto.extensions.deleteFromDatabase
-import com.github.petropavel13.twophoto.extensions.getRealAdapter
+import com.github.petropavel13.twophoto.extensions.*
 import com.github.petropavel13.twophoto.model.PostDetail
 import com.github.petropavel13.twophoto.sources.DataSource
 import com.github.petropavel13.twophoto.sources.ORMLitePostsDataSource
@@ -176,6 +174,7 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
             R.id.menu_post_detail_action_save_post -> {
                 with(DatabaseOpenHelper(ctx)) {
                     try {
+                        post.savePostImages(ctx)
                         post.createInDatabase(this)
 
                         menuItemRemove?.setVisible(true)
@@ -192,12 +191,14 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
             R.id.menu_post_detail_action_remove_post -> {
                 with(DatabaseOpenHelper(ctx)) {
                     try {
+                        post.deletePostImages(ctx)
                         post.deleteFromDatabase(this)
 
                         menuItemRemove?.setVisible(false)
                         menuItemSave?.setVisible(true)
 
                         Toast.makeText(ctx, "Post was successfully removed", Toast.LENGTH_LONG)
+                        finish()
                     } catch(e: SQLiteException) {
                         Toast.makeText(ctx, "Failed to remove post", Toast.LENGTH_LONG)
                     } finally {
