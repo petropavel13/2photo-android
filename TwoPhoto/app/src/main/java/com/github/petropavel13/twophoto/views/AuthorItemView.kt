@@ -35,12 +35,12 @@ class AuthorItemView: FrameLayout {
     private var _author = Post.Author()
 
     var author: Post.Author
-    get() = _author
-    set(newValue) {
-        _author = newValue
+        get() = _author
+        set(newValue) {
+            _author = newValue
 
-        nameTextView?.setText(newValue.name)
+            nameTextView?.setText(newValue.name)
 
-        avatarImageView?.setImageURI(Uri.parse("http://${newValue.avatar_url}"))
-    }
+            avatarImageView?.setImageURI(Uri.parse("http://${newValue.avatar_url}"))
+        }
 }

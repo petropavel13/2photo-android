@@ -1,19 +1,18 @@
 package com.github.petropavel13.twophoto.views
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.net.Uri
 import android.os.Build
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
-import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.request.ImageRequest
-import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.Post
 
@@ -24,6 +23,16 @@ import com.github.petropavel13.twophoto.model.Post
 class PostItemView: RelativeLayout {
     companion object {
         val LAYOUT_RESOURCE = R.layout.post_grid_item_layout
+
+        SuppressWarnings("deprecation")
+        private fun setBackgroundDrawablePreJellyBean(view: View?, drawable: GradientDrawable) {
+            view?.setBackgroundDrawable(drawable)
+        }
+
+        TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        private fun setBackgroundDrawableJellyBean(view: View?, drawable: GradientDrawable) {
+            view?.setBackground(drawable)
+        }
     }
 
     constructor(ctx: Context): super(ctx) { }
@@ -62,9 +71,9 @@ class PostItemView: RelativeLayout {
             setStroke(1, borderColor)
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                setBackground(this);
+                setBackgroundDrawableJellyBean(this@PostItemView, this)
             } else {
-                setBackgroundDrawable(this);
+                setBackgroundDrawablePreJellyBean(this@PostItemView, this)
             }
         }
 
@@ -73,9 +82,9 @@ class PostItemView: RelativeLayout {
             setStroke(1, borderColor)
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                attributesLayout?.setBackground(this)
+                setBackgroundDrawableJellyBean(attributesLayout, this)
             } else {
-                attributesLayout?.setBackgroundDrawable(this)
+                setBackgroundDrawablePreJellyBean(attributesLayout, this)
             }
         }
     }

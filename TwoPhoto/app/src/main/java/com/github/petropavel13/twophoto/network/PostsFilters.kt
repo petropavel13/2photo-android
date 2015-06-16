@@ -30,10 +30,10 @@ public class PostsFilters {
     }
 
     companion object {
-        val ARTIST_ID_KEY = "artist_id"
-        val AUTHOR_ID_KEY = "author_id"
-        val TAG_ID_KEY = "tag_id"
-        val CATEGORY_ID_KEY = "category_id"
+        private val ARTIST_ID_KEY = "artist_id"
+        private val AUTHOR_ID_KEY = "author_id"
+        private val TAG_ID_KEY = "tag_id"
+        private val CATEGORY_ID_KEY = "category_id"
     }
 
     public val bundle: Bundle

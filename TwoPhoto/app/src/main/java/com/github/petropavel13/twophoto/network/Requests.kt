@@ -1,6 +1,5 @@
 package com.github.petropavel13.twophoto.network
 
-import android.net.Uri
 import com.github.petropavel13.twophoto.BuilderForApiUri
 import com.github.petropavel13.twophoto.model.AuthorDetail
 import com.github.petropavel13.twophoto.model.LimitedResultsList
