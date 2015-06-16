@@ -88,7 +88,7 @@ class EntryView: RelativeLayout {
             }
 
             val controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(Uri.parse("http://${entry.big_img_url}"))
+                    .setUri(Uri.parse(entry.big_img_url))
                     .setControllerListener(object: BaseControllerListener<ImageInfo>() {
                         override fun onFinalImageSet(id: String?, imageInfo: ImageInfo?, animatable: Animatable?) {
                             super.onFinalImageSet(id, imageInfo, animatable)

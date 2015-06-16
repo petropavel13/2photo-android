@@ -74,7 +74,7 @@ class AuthorDetailView: LinearLayout {
         set(newValue) {
             _author = newValue
 
-            avatarImageView?.setImageURI(Uri.parse("http://${newValue.avatar_url}"))
+            avatarImageView?.setImageURI(Uri.parse(newValue.avatar_url))
 
             nameTextView?.setText(newValue.name)
 

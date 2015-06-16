@@ -98,7 +98,7 @@ class PostItemView: RelativeLayout {
         set(newValue) {
             _post = newValue
 
-            request = ImageRequest.fromUri("http://${newValue.face_image_url}")
+            request = ImageRequest.fromUri(newValue.face_image_url)
 
 
             faceImageView?.setController(Fresco.newDraweeControllerBuilder()

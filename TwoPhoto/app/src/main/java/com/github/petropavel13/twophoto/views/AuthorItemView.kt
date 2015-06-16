@@ -41,6 +41,6 @@ class AuthorItemView: FrameLayout {
 
             nameTextView?.setText(newValue.name)
 
-            avatarImageView?.setImageURI(Uri.parse("http://${newValue.avatar_url}"))
+            avatarImageView?.setImageURI(Uri.parse(newValue.avatar_url))
         }
 }

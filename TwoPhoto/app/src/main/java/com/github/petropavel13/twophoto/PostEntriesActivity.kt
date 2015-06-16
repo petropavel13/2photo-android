@@ -147,7 +147,7 @@ public class PostEntriesActivity : AppCompatActivity() {
                         wallpapersInProgress.add(currentItemIndex)
 
                         Fresco.getImagePipeline()
-                                .fetchDecodedImage(ImageRequest.fromUri("http://${entry.big_img_url}"), null)
+                                .fetchDecodedImage(ImageRequest.fromUri(entry.big_img_url), null)
                                 .subscribe(object: BaseBitmapDataSubscriber() {
                                     override fun onNewResultImpl(bitmap: Bitmap?) {
                                         var completed = false
@@ -186,7 +186,7 @@ public class PostEntriesActivity : AppCompatActivity() {
                         downloadsInProgress.add(currentItemIndex)
 
                         Fresco.getImagePipeline()
-                                .fetchDecodedImage(ImageRequest.fromUri("http://${entry.big_img_url}"), null)
+                                .fetchDecodedImage(ImageRequest.fromUri(entry.big_img_url), null)
                                 .subscribe(object: BaseBitmapDataSubscriber() {
                                     override fun onNewResultImpl(bitmap: Bitmap?) {
                                         val completed = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "2photo-$postId-${entry.id}", entry.description) != null

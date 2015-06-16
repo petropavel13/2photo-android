@@ -50,7 +50,7 @@ class PostDetailEntryView: LinearLayout {
         set(newValue) {
             _entry = newValue
 
-            request = ImageRequestBuilder.newBuilderWithSource(Uri.parse("http://${newValue.medium_img_url}"))
+            request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(newValue.medium_img_url))
                     .setResizeOptions(ResizeOptions(imageSize, imageSize))
                     .build()
 
