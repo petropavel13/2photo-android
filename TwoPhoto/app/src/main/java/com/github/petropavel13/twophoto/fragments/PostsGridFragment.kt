@@ -109,7 +109,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
             this?.notifyDataSetChanged()
         }
 
-        currentOffset += result.count
+        currentOffset += result.results.count()
     }
 
     override fun onError(exception: Exception) {
