@@ -37,7 +37,6 @@ dependencies {
         exclude module: 'xpp3'
         exclude group: 'stax'
     }
-    compile "com.github.chrisbanes.photoview:library:+"
     compile "com.facebook.fresco:fresco:+"
     compile "com.etsy.android.grid:library:+"
     compile "com.android.support:appcompat-v7:+"
