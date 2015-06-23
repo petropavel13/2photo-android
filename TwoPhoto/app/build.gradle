@@ -45,7 +45,7 @@ dependencies {
     compile "com.j256.ormlite:ormlite-android:+"
 }
 buildscript {
-    ext.kotlin_version = '0.12.412'
+    ext.kotlin_version = '0.12.613'
     repositories {
         mavenCentral()
     }
