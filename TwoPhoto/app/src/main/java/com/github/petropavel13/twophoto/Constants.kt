@@ -8,5 +8,5 @@ import android.net.Uri
 
 fun BuilderForApiUri() = Uri.Builder()
             .scheme("http")
-            .authority("198.49.66.155")
+            .authority("192.227.236.251")
             .appendPath("v1")
