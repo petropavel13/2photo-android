@@ -68,7 +68,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
         with(item as EntryView) {
             (container as ViewPager).removeView(this)
 
-            _positionViewMap.remove(this)
+            _positionViewMap.remove(position)
         }
     }
 }

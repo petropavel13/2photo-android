@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.samples.zoomable.ZoomableDraweeView
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.model.Post
@@ -79,8 +78,11 @@ class EntryView: RelativeLayout {
                 descriptionTextView?.setVisibility(View.VISIBLE)
             }
 
+            // TODO: tap-to-fullscreen by default and tap-to-retry on error
+
             val controller = Fresco.newDraweeControllerBuilder()
                     .setUri(Uri.parse(entry.big_img_url))
+                    .setTapToRetryEnabled(true)
                     .setOldController(imageView?.getController())
                     .build()
 
