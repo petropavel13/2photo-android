@@ -37,7 +37,7 @@ dependencies {
         exclude module: 'xpp3'
         exclude group: 'stax'
     }
-    compile "com.facebook.fresco:fresco:+"
+    compile "com.facebook.fresco:fresco:0.6.1"
     compile "com.etsy.android.grid:library:+"
     compile "com.android.support:appcompat-v7:+"
     compile "com.splunk.mint:mint:4.1"
