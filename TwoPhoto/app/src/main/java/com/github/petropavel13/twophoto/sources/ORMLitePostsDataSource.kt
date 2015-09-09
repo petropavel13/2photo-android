@@ -68,6 +68,10 @@ class ORMLitePostsDataSource(private val databaseOpenHelper: DatabaseOpenHelper)
             override fun doInBackground(vararg p0: Void?): PostDetail? {
                 try {
                     with(databaseOpenHelper.postsDao().queryForId(forId)) {
+                        if (this == null) {
+                            return this
+                        }
+
                         entries = dbEntries?.toList() ?: emptyList<Post.Entry>()
                         comments = dbComments?.toList() ?: emptyList<PostDetail.Comment>()
 

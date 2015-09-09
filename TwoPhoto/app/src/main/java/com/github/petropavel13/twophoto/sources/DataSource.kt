@@ -11,7 +11,7 @@ import com.github.petropavel13.twophoto.network.PostsFilters
 
 abstract class DataSource<RL, RD, F> {
     public interface ResponseListener<R> {
-        fun onResponse(result: R)
+        fun onResponse(result: R?)
         fun onError(exception: Exception)
     }
 

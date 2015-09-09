@@ -95,8 +95,9 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
         }
     }
 
-    override fun onResponse(result: LimitedPostsList) {
-        lastPageReached = result.next?.isEmpty() ?: true // no next page (null or empty)
+    override fun onResponse(result: LimitedPostsList?) {
+
+        lastPageReached = result?.next?.isEmpty() ?: true // no next page (null or empty)
 
         if (lastPageReached) {
             postsGridView?.removeFooterView(loadingMoreFooter)
@@ -104,12 +105,14 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
             loadingMoreFooter?.setVisibility(View.INVISIBLE)
         }
 
+        val results = result?.results ?: emptyList<Post>()
+
         with(postsGridView?.getRealAdapter<PostsAdapter>()) {
-            this?.addAll(result.results)
+            this?.addAll(results)
             this?.notifyDataSetChanged()
         }
 
-        currentOffset += result.results.count()
+        currentOffset += results.count()
     }
 
     override fun onError(exception: Exception) {
@@ -175,6 +178,8 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
             this?.clear()
             this?.notifyDataSetChanged()
         }
+
+        currentOffset = 0
 
         postsDataSource.requestList(this, postsFilters, postsPerPage, currentOffset)
     }

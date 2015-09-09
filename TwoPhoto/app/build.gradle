@@ -40,9 +40,10 @@ dependencies {
     compile "com.facebook.fresco:fresco:0.6.1"
     compile "com.etsy.android.grid:library:+"
     compile "com.android.support:appcompat-v7:+"
-    compile "com.splunk.mint:mint:4.1"
+    compile "com.splunk.mint:mint:4.3.0"
     compile "com.ns-developer:tagcloudview:+"
     compile "com.j256.ormlite:ormlite-android:+"
+    compile "com.squareup:otto:+"
 }
 buildscript {
     ext.kotlin_version = '0.12.613'

@@ -14,6 +14,8 @@ import android.widget.Toast
 import com.etsy.android.grid.StaggeredGridView
 import com.github.petropavel13.twophoto.adapters.EntriesAdapter
 import com.github.petropavel13.twophoto.db.DatabaseOpenHelper
+import com.github.petropavel13.twophoto.events.PostDeletedEvent
+import com.github.petropavel13.twophoto.events.PostSavedEvent
 import com.github.petropavel13.twophoto.extensions.*
 import com.github.petropavel13.twophoto.model.PostDetail
 import com.github.petropavel13.twophoto.sources.DataSource
@@ -180,6 +182,8 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
                         menuItemRemove?.setVisible(true)
                         menuItemSave?.setVisible(false)
 
+                        eventsBus.post(PostSavedEvent(post))
+
                         Toast.makeText(ctx, "Successful saved post", Toast.LENGTH_LONG)
                     } catch(e: SQLiteException) {
                         Toast.makeText(ctx, "Failed to save post", Toast.LENGTH_LONG)
@@ -197,6 +201,8 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
                         menuItemRemove?.setVisible(false)
                         menuItemSave?.setVisible(true)
 
+                        eventsBus.post(PostDeletedEvent(post))
+
                         Toast.makeText(ctx, "Post was successfully removed", Toast.LENGTH_LONG)
                         finish()
                     } catch(e: SQLiteException) {
@@ -211,21 +217,21 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
         return super<AppCompatActivity>.onOptionsItemSelected(item)
     }
 
-    override fun onResponse(result: PostDetail) {
-        post = result
+    override fun onResponse(result: PostDetail?) {
+        post = result ?: PostDetail()
 
-        titleTextView?.setText(result.title)
-        descriptionTextView?.setText(result.description)
+        titleTextView?.setText(post.title)
+        descriptionTextView?.setText(post.description)
 
-        authorItemView?.author = result.author
+        authorItemView?.author = post.author
 
-        result.tags.map { it.title }.forEachIndexed { i, s -> tagCloudView?.add(Tag(i, s)) }
+        post.tags.map { it.title }.forEachIndexed { i, s -> tagCloudView?.add(Tag(i, s)) }
         tagCloudView?.drawTags()
 
         entriesGridView?.addHeaderView(headerView)
         entriesGridView?.addFooterView(footerView)
 
-        entriesGridView?.setAdapter(EntriesAdapter(this, result.entries))
+        entriesGridView?.setAdapter(EntriesAdapter(this, post.entries))
 
         loadingProgressBar?.setVisibility(View.INVISIBLE)
         entriesGridView?.setVisibility(View.VISIBLE)
@@ -234,8 +240,26 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
             menuItemRemove?.setVisible(true)
             menuItemSave?.setVisible(false)
         } else {
+            // set default
             menuItemRemove?.setVisible(false)
             menuItemSave?.setVisible(true)
+
+            // and then check existence in db
+            with(ORMLitePostsDataSource(DatabaseOpenHelper(this))) {
+                requestDetail(object: DataSource.ResponseListener<PostDetail>{
+                    override fun onResponse(result: PostDetail?) {
+                        val exists = result != null
+
+                        menuItemRemove?.setVisible(exists)
+                        menuItemSave?.setVisible(!exists)
+                    }
+
+                    override fun onError(exception: Exception) {
+                        //
+                    }
+
+                }, post.id)
+            }
         }
     }
 

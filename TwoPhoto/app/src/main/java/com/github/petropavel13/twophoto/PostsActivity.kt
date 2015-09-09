@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.github.petropavel13.twophoto.db.DatabaseOpenHelper
+import com.github.petropavel13.twophoto.events.PostDeletedEvent
+import com.github.petropavel13.twophoto.events.PostSavedEvent
 import com.github.petropavel13.twophoto.fragments.PostsGridFragment
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.sources.ORMLitePostsDataSource
@@ -15,6 +17,7 @@ import com.github.petropavel13.twophoto.sources.SpicePostsDataSource
 import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService
 import com.octo.android.robospice.SpiceManager
 import com.splunk.mint.Mint
+import com.squareup.otto.Subscribe
 
 
 public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInteractionListener {
@@ -40,6 +43,8 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
 
     private val fragmentsSources = arrayOf(SpicePostsDataSource(spiceManager, POSTS_PER_PAGE), ORMLitePostsDataSource(DatabaseOpenHelper(this)))
 
+    private val fragments = Array(fragmentsSources.count(), { PostsGridFragment.newInstance(fragmentsSources[it], POSTS_PER_PAGE) })
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super<FragmentActivity>.onCreate(savedInstanceState)
 
@@ -48,8 +53,6 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
         Fresco.initialize(this)
 
         setContentView(R.layout.activity_posts)
-
-        val fragments = Array(fragmentsSources.count(), { PostsGridFragment.newInstance(fragmentsSources[it], POSTS_PER_PAGE) })
 
         viewPager = findViewById(R.id.posts_pager) as? ViewPager
         viewPager?.setAdapter(object: FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -66,6 +69,26 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
 
             override fun getPageTitle(position: Int): CharSequence? = titles[position]
         })
+
+        eventsBus.register(this);
+    }
+
+    Subscribe
+    fun postAdded(event: PostSavedEvent) {
+        fragmentsSources.forEachIndexed { idx, postsDataSource ->
+            if(postsDataSource is ORMLitePostsDataSource) {
+                fragments[idx].reload()
+            }
+        }
+    }
+
+    Subscribe
+    fun postRemoved(event: PostDeletedEvent) {
+        fragmentsSources.forEachIndexed { idx, postsDataSource ->
+            if(postsDataSource is ORMLitePostsDataSource) {
+                fragments[idx].reload()
+            }
+        }
     }
 
     override fun onStart() {
