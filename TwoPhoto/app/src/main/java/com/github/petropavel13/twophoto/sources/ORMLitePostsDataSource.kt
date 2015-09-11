@@ -100,10 +100,10 @@ class ORMLitePostsDataSource(private val databaseOpenHelper: DatabaseOpenHelper)
 
                 unfinishedTaskDetail = null
 
-                if (result != null) {
-                    listener.onResponse(result)
-                } else {
+                if (exception != null) {
                     listener.onError(exception!!)
+                } else {
+                    listener.onResponse(result)
                 }
             }
         }
