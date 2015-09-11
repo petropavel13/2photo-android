@@ -1,6 +1,7 @@
 package com.github.petropavel13.twophoto.fragments
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,12 +11,17 @@ import android.widget.AbsListView
 import com.etsy.android.grid.StaggeredGridView
 import com.github.petropavel13.twophoto.R
 import com.github.petropavel13.twophoto.adapters.PostsAdapter
+import com.github.petropavel13.twophoto.db.DatabaseOpenHelper
 import com.github.petropavel13.twophoto.extensions.getRealAdapter
 import com.github.petropavel13.twophoto.model.Post
 import com.github.petropavel13.twophoto.network.LimitedPostsList
 import com.github.petropavel13.twophoto.network.PostsFilters
 import com.github.petropavel13.twophoto.sources.DataSource
+import com.github.petropavel13.twophoto.sources.ORMLitePostsDataSource
 import com.github.petropavel13.twophoto.sources.PostsDataSource
+import com.github.petropavel13.twophoto.sources.SpicePostsDataSource
+import com.octo.android.robospice.Jackson2GoogleHttpClientSpiceService
+import com.octo.android.robospice.SpiceManager
 import kotlin.properties.Delegates
 
 public class PostsGridFragment : Fragment(), DataSource.ResponseListener<LimitedPostsList> {
@@ -35,6 +41,10 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
     var postsPerPage: Int by Delegates.notNull()
 
+    var useORMLiteDataSource = false
+
+    private val spiceManager = SpiceManager(javaClass<Jackson2GoogleHttpClientSpiceService>())
+
     private var currentOffset = 0
 
     private var lastPageReached = false
@@ -51,10 +61,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
         val arguments = getArguments()
 
         if (arguments != null) {
-            if (arguments.containsKey(ARG_POSTS_FILTERS)) {
-                mPostsFilters = PostsFilters(arguments.getBundle(ARG_POSTS_FILTERS))
-                postsPerPage = arguments.getInt(ARG_POSTS_PER_PAGE)
-            }
+            loadState(arguments)
         }
     }
 
@@ -96,7 +103,6 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     }
 
     override fun onResponse(result: LimitedPostsList?) {
-
         lastPageReached = result?.next?.isEmpty() ?: true // no next page (null or empty)
 
         if (lastPageReached) {
@@ -119,18 +125,54 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
         mListener?.onError(exception)
     }
 
-    override fun onAttach(activity: Activity) {
+    override fun onAttach(context: Context?) {
+        super<Fragment>.onAttach(context)
+
+        try {
+            mListener = context as OnFragmentInteractionListener
+
+            val arguments = getArguments()
+
+            if (arguments != null) {
+                loadState(arguments)
+            }
+
+            createDataSource(context)
+        } catch (e: ClassCastException) {
+            throw ClassCastException(context.toString() + " must implement ${ javaClass<OnFragmentInteractionListener>().getSimpleName() }")
+        }
+    }
+
+    override fun onAttach(activity: Activity?) {
         super<Fragment>.onAttach(activity)
 
         try {
             mListener = activity as OnFragmentInteractionListener
+
+            val arguments = getArguments()
+
+            if (arguments != null) {
+                loadState(arguments)
+            }
+
+            createDataSource(activity)
         } catch (e: ClassCastException) {
             throw ClassCastException(activity.toString() + " must implement ${ javaClass<OnFragmentInteractionListener>().getSimpleName() }")
         }
     }
 
+    private fun createDataSource(ctx: Context) {
+        if (useORMLiteDataSource) {
+            postsDataSource = ORMLitePostsDataSource(DatabaseOpenHelper(ctx))
+        } else {
+            postsDataSource = SpicePostsDataSource(spiceManager, postsPerPage)
+        }
+    }
+
     override fun onStart() {
         super<Fragment>.onStart()
+
+        spiceManager.start(getActivity())
 
         if (wasStopped) {
             postsDataSource.retryUnfinishedRequest()
@@ -146,6 +188,10 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
         wasStopped = true
 
+        if (spiceManager.isStarted()) {
+            spiceManager.shouldStop()
+        }
+
         super<Fragment>.onStop()
 
         postsGridView?.getRealAdapter<PostsAdapter>()?.unloadItemsImages()
@@ -160,17 +206,27 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     override fun onSaveInstanceState(outState: Bundle) {
         super<Fragment>.onSaveInstanceState(outState)
 
+        saveState(outState)
+    }
+
+    private fun saveState(outState: Bundle) {
         outState.putBundle(ARG_POSTS_FILTERS, postsFilters.bundle)
         outState.putInt(ARG_POSTS_PER_PAGE, postsPerPage)
+        outState.putBoolean(ARG_USE_ORMLITE_DATASOURCE, useORMLiteDataSource)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super<Fragment>.onActivityCreated(savedInstanceState)
 
         if(savedInstanceState != null) {
-            postsFilters = PostsFilters(savedInstanceState.getBundle(ARG_POSTS_FILTERS))
-            postsPerPage = savedInstanceState.getInt(ARG_POSTS_PER_PAGE)
+            loadState(savedInstanceState)
         }
+    }
+
+    private fun loadState(savedInstanceState: Bundle) {
+        postsFilters = PostsFilters(savedInstanceState.getBundle(ARG_POSTS_FILTERS))
+        postsPerPage = savedInstanceState.getInt(ARG_POSTS_PER_PAGE)
+        useORMLiteDataSource = savedInstanceState.getBoolean(ARG_USE_ORMLITE_DATASOURCE)
     }
 
     fun reload() {
@@ -203,19 +259,18 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     companion object {
         private val ARG_POSTS_FILTERS = "posts_filters"
         private val ARG_POSTS_PER_PAGE = "posts_per_page"
+        private val ARG_USE_ORMLITE_DATASOURCE = "ormlite_datasource"
 
-        public fun newInstance(postsDataSource: PostsDataSource, postsPerPage: Int, postsFilters: PostsFilters = PostsFilters()): PostsGridFragment {
+        public fun newInstance(postsPerPage: Int, useORMLiteDataSource: Boolean = false, postsFilters: PostsFilters = PostsFilters()): PostsGridFragment {
             val fragment = PostsGridFragment()
 
             with(Bundle()) {
                 putBundle(ARG_POSTS_FILTERS, postsFilters.bundle)
                 putInt(ARG_POSTS_PER_PAGE, postsPerPage)
+                putBoolean(ARG_USE_ORMLITE_DATASOURCE, useORMLiteDataSource)
 
                 fragment.setArguments(this)
             }
-
-            fragment.postsDataSource = postsDataSource
-            fragment.postsPerPage = postsPerPage
 
             return fragment
         }
