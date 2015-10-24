@@ -23,7 +23,7 @@ import com.octo.android.robospice.request.listener.RequestListener
 
 public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFragmentInteractionListener {
     override fun onPostSelected(post: Post) {
-        with(Intent(this, javaClass<PostDetailActivity>())) {
+        with(Intent(this, PostDetailActivity::class.java)) {
             putExtra(PostDetailActivity.POST_ID_KEY, post.id)
             startActivity(this)
         }
@@ -33,7 +33,7 @@ public class AuthorDetailActivity : FragmentActivity(), PostsGridFragment.OnFrag
         // TODO: handle somehow
     }
 
-    private val spiceManager = SpiceManager(javaClass<Jackson2GoogleHttpClientSpiceService>())
+    private val spiceManager = SpiceManager(Jackson2GoogleHttpClientSpiceService::class.java)
 
     companion object {
         val AUTHOR_KEY = "author"

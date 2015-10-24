@@ -21,9 +21,9 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
     }
 
     override fun onPostSelected(post: Post) {
-        with(Intent(this, javaClass<PostDetailActivity>())) {
+        with(Intent(this, PostDetailActivity::class.java)) {
             putExtra(PostDetailActivity.POST_ID_KEY, post.id)
-            putExtra(PostDetailActivity.FETCH_FROM_DB_KEY, fragments[viewPager?.getCurrentItem() ?: 0].useORMLiteDataSource)
+            putExtra(PostDetailActivity.FETCH_FROM_DB_KEY, fragments[viewPager?.currentItem ?: 0].useORMLiteDataSource)
             startActivity(this)
         }
     }
@@ -37,7 +37,7 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
     private val fragments = arrayOf(PostsGridFragment.newInstance(POSTS_PER_PAGE), PostsGridFragment.newInstance(POSTS_PER_PAGE, useORMLiteDataSource = true))
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<FragmentActivity>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
         Mint.initAndStartSession(this, "4e4a18ab")
 
@@ -46,7 +46,7 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
         setContentView(R.layout.activity_posts)
 
         viewPager = findViewById(R.id.posts_pager) as? ViewPager
-        viewPager?.setAdapter(object: FragmentPagerAdapter(getSupportFragmentManager()) {
+        viewPager?.adapter = object: FragmentPagerAdapter(getSupportFragmentManager()) {
             val titles = arrayOf(getResources().getString(R.string.posts_feed), getResources().getString(R.string.posts_favorites))
 
             override fun getCount(): Int = fragments.count()
@@ -60,17 +60,17 @@ public class PostsActivity : FragmentActivity(), PostsGridFragment.OnFragmentInt
             }
 
             override fun getPageTitle(position: Int): CharSequence? = titles[position]
-        })
+        }
 
         eventsBus.register(this);
     }
 
-    Subscribe
+    @Subscribe
     fun postAdded(event: PostSavedEvent) {
         fragments.forEach { if (it.useORMLiteDataSource) it.reload() }
     }
 
-    Subscribe
+    @Subscribe
     fun postRemoved(event: PostDeletedEvent) {
         fragments.forEach { if (it.useORMLiteDataSource) it.reload() }
     }

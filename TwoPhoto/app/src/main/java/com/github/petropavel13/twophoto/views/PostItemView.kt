@@ -24,14 +24,14 @@ class PostItemView: RelativeLayout {
     companion object {
         val LAYOUT_RESOURCE = R.layout.post_grid_item_layout
 
-        SuppressWarnings("deprecation")
+        @SuppressWarnings("deprecation")
         private fun setBackgroundDrawablePreJellyBean(view: View?, drawable: GradientDrawable) {
             view?.setBackgroundDrawable(drawable)
         }
 
-        TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         private fun setBackgroundDrawableJellyBean(view: View?, drawable: GradientDrawable) {
-            view?.setBackground(drawable)
+            view?.background = drawable
         }
     }
 
@@ -63,8 +63,8 @@ class PostItemView: RelativeLayout {
         ratingTextView = findViewById(R.id.post_item_rating_text_view) as? TextView
 
 
-        bgColor = getResources().getColor(R.color.post_item_bg_color)
-        borderColor = getResources().getColor(R.color.post_item_border_color)
+        bgColor = resources.getColor(R.color.post_item_bg_color)
+        borderColor = resources.getColor(R.color.post_item_border_color)
 
         with(GradientDrawable()){
             setColor(bgColor)
@@ -101,17 +101,17 @@ class PostItemView: RelativeLayout {
             request = ImageRequest.fromUri(newValue.face_image_url)
 
 
-            faceImageView?.setController(Fresco.newDraweeControllerBuilder()
+            faceImageView?.controller = Fresco.newDraweeControllerBuilder()
                     .setImageRequest(request)
-                    .build())
+                    .build()
 
             val color = Color.parseColor(_post.color)
 
-            titleTextView?.setText(newValue.title)
+            titleTextView?.text = newValue.title
             titleTextView?.setTextColor(color)
-            authorTextView?.setText("by ${newValue.author.name}")
-            commentsCountTextView?.setText(newValue.number_of_comments.toString())
-            ratingTextView?.setText("${newValue.rating}%")
+            authorTextView?.text = "by ${newValue.author.name}"
+            commentsCountTextView?.text = newValue.number_of_comments.toString()
+            ratingTextView?.text = "${newValue.rating}%"
 
         }
 
@@ -120,8 +120,8 @@ class PostItemView: RelativeLayout {
     }
 
     fun loadEntryImage() {
-        faceImageView?.setController(Fresco.newDraweeControllerBuilder()
+        faceImageView?.controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
-                .build())
+                .build()
     }
 }

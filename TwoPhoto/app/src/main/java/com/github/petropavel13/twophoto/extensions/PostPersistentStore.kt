@@ -26,11 +26,11 @@ import java.io.IOException
  * Created by petropavel on 11/06/15.
  */
 
-throws(SQLiteException::class)
+@Throws(SQLiteException::class)
 fun PostDetail.createInDatabase(dbHelper: DatabaseOpenHelper) {
     val post = this
 
-    TransactionManager.callInTransaction(dbHelper.getConnectionSource(), {
+    TransactionManager.callInTransaction(dbHelper.connectionSource, {
         with(dbHelper.tagsDao()) {
             tags.forEach { createIfNotExists(it) }
         }
@@ -83,13 +83,13 @@ class ImageSaver(val imageFile: File): BaseDataSubscriber<CloseableReference<Poo
         private val MAX_BUFFER_SIZE = 1024 * 128 // 128 KB
     }
     override fun onFailureImpl(dataSource: DataSource<CloseableReference<PooledByteBuffer>>) {
-        exception = dataSource.getFailureCause()
+        exception = dataSource.failureCause
     }
 
     override fun onNewResultImpl(dataSource: DataSource<CloseableReference<PooledByteBuffer>>) {
-        if (dataSource.isFinished()) {
+        if (dataSource.isFinished) {
             if(dataSource.hasResult()) {
-                val imageReference = dataSource.getResult()
+                val imageReference = dataSource.result
 
                 var fos: FileOutputStream? = null
 
@@ -148,7 +148,7 @@ fun PostDetail.savePostImages(ctx: Context) {
             with(Fresco.getImagePipeline()) {
                 val faceImageUri = Uri.parse(face_image_url)
 
-                val faceImageFile = File(postFolder, faceImageUri.getLastPathSegment())
+                val faceImageFile = File(postFolder, faceImageUri.lastPathSegment)
 
                 if (faceImageFile.exists()) {
                     if (faceImageFile.delete() == false) {
@@ -171,8 +171,8 @@ fun PostDetail.savePostImages(ctx: Context) {
                     val mediumUri = Uri.parse(it.medium_img_url)
                     val bigUri = Uri.parse(it.big_img_url)
 
-                    val mediumImageFile = File(postFolder, mediumUri.getLastPathSegment())
-                    val bigImageFile = File(postFolder, bigUri.getLastPathSegment())
+                    val mediumImageFile = File(postFolder, mediumUri.lastPathSegment)
+                    val bigImageFile = File(postFolder, bigUri.lastPathSegment)
 
                     if (mediumImageFile.exists()) {
                         if (mediumImageFile.delete() == false) {
@@ -217,9 +217,10 @@ fun PostDetail.savePostImages(ctx: Context) {
     }
 }
 
-throws(SQLiteException::class)
+
+@Throws(SQLiteException::class)
 fun PostDetail.deleteFromDatabase(dbHelper: DatabaseOpenHelper) {
-    TransactionManager.callInTransaction(dbHelper.getConnectionSource(), {
+    TransactionManager.callInTransaction(dbHelper.connectionSource, {
         dbHelper.postArtistDao().deleteIds(artists.map { it.id })
 
         dbHelper.postCategoryDao().deleteIds(categories.map { it.id })

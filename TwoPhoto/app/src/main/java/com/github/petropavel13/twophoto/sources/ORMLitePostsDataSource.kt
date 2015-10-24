@@ -76,16 +76,16 @@ class ORMLitePostsDataSource(private val databaseOpenHelper: DatabaseOpenHelper)
                         comments = dbComments?.toList() ?: emptyList<PostDetail.Comment>()
 
                         fun postColumnForClass(cls: Class<*>) = with(cls.getDeclaredField("post")) {
-                            with(getAnnotation(javaClass<DatabaseField>())?.columnName) {
-                                if(isNullOrEmpty()) "${getName()}_id" else this
+                            with(getAnnotation(DatabaseField::class.java)?.columnName) {
+                                if(isNullOrEmpty()) "${name}_id" else this
                             }
                         }
 
-                        artists = databaseOpenHelper.postArtistDao().queryForEq(postColumnForClass(javaClass<PostArtist>()), this).map { it.artist }
+                        artists = databaseOpenHelper.postArtistDao().queryForEq(postColumnForClass(PostArtist::class.java), this).map { it.artist }
 
-                        tags = databaseOpenHelper.postTagsDao().queryForEq(postColumnForClass(javaClass<PostTag>()), this).map { it.tag }
+                        tags = databaseOpenHelper.postTagsDao().queryForEq(postColumnForClass(PostTag::class.java), this).map { it.tag }
 
-                        categories = databaseOpenHelper.postCategoryDao().queryForEq(postColumnForClass(javaClass<PostCategory>()), this).map { it.category }
+                        categories = databaseOpenHelper.postCategoryDao().queryForEq(postColumnForClass(PostCategory::class.java), this).map { it.category }
 
                         return this
                     }

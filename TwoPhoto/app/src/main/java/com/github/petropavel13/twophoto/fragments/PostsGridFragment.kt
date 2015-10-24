@@ -43,7 +43,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
     var useORMLiteDataSource = false
 
-    private val spiceManager = SpiceManager(javaClass<Jackson2GoogleHttpClientSpiceService>())
+    private val spiceManager = SpiceManager(Jackson2GoogleHttpClientSpiceService::class.java)
 
     private var currentOffset = 0
 
@@ -56,9 +56,9 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     private var wasStopped = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<Fragment>.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
-        val arguments = getArguments()
+        val arguments = arguments
 
         if (arguments != null) {
             loadState(arguments)
@@ -67,7 +67,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         with(inflater.inflate(R.layout.fragment_posts_grid, container, false)) {
-            val ctx = getContext()
+            val ctx = context
 
             loadingMoreFooter = inflater.inflate(R.layout.loading_more_layout, null)
 
@@ -76,7 +76,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
                 addFooterView(loadingMoreFooter)
 
-                setAdapter(PostsAdapter(ctx, emptyList<Post>()))
+                adapter = PostsAdapter(ctx, emptyList<Post>())
 
                 setOnScrollListener(object: AbsListView.OnScrollListener {
                     override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
@@ -84,7 +84,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
                     override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
                         if (lastPageReached == false && firstVisibleItem + visibleItemCount == totalItemCount - 1) {
-                            loadingMoreFooter?.setVisibility(View.VISIBLE)
+                            loadingMoreFooter?.visibility = View.VISIBLE
 
                             postsDataSource.requestList(this@PostsGridFragment, postsFilters, postsPerPage, currentOffset)
                         }
@@ -92,7 +92,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
                 })
 
                 setOnItemClickListener { adapterView, view, i, l ->
-                    val post = adapterView.getRealAdapter<PostsAdapter>()!!.getItem(i - getHeaderViewsCount())
+                    val post = adapterView.getRealAdapter<PostsAdapter>()!!.getItem(i - headerViewsCount)
 
                     mListener?.onPostSelected(post)
                 }
@@ -108,7 +108,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
         if (lastPageReached) {
             postsGridView?.removeFooterView(loadingMoreFooter)
         } else {
-            loadingMoreFooter?.setVisibility(View.INVISIBLE)
+            loadingMoreFooter?.visibility = View.INVISIBLE
         }
 
         val results = result?.results ?: emptyList<Post>()
@@ -126,12 +126,12 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     }
 
     override fun onAttach(context: Context?) {
-        super<Fragment>.onAttach(context)
+        super.onAttach(context)
 
         try {
             mListener = context as OnFragmentInteractionListener
 
-            val arguments = getArguments()
+            val arguments = arguments
 
             if (arguments != null) {
                 loadState(arguments)
@@ -139,17 +139,17 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
             createDataSource(context)
         } catch (e: ClassCastException) {
-            throw ClassCastException(context.toString() + " must implement ${ javaClass<OnFragmentInteractionListener>().getSimpleName() }")
+            throw ClassCastException(context.toString() + " must implement ${ OnFragmentInteractionListener::class.java.simpleName }")
         }
     }
 
     override fun onAttach(activity: Activity?) {
-        super<Fragment>.onAttach(activity)
+        super.onAttach(activity)
 
         try {
             mListener = activity as OnFragmentInteractionListener
 
-            val arguments = getArguments()
+            val arguments = arguments
 
             if (arguments != null) {
                 loadState(arguments)
@@ -157,7 +157,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
             createDataSource(activity)
         } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement ${ javaClass<OnFragmentInteractionListener>().getSimpleName() }")
+            throw ClassCastException(activity.toString() + " must implement ${ OnFragmentInteractionListener::class.java.simpleName }")
         }
     }
 
@@ -170,9 +170,9 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     }
 
     override fun onStart() {
-        super<Fragment>.onStart()
+        super.onStart()
 
-        spiceManager.start(getActivity())
+        spiceManager.start(activity)
 
         if (wasStopped) {
             postsDataSource.retryUnfinishedRequest()
@@ -188,23 +188,23 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
 
         wasStopped = true
 
-        if (spiceManager.isStarted()) {
+        if (spiceManager.isStarted) {
             spiceManager.shouldStop()
         }
 
-        super<Fragment>.onStop()
+        super.onStop()
 
         postsGridView?.getRealAdapter<PostsAdapter>()?.unloadItemsImages()
     }
 
     override fun onDetach() {
-        super<Fragment>.onDetach()
+        super.onDetach()
 
         mListener = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super<Fragment>.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
 
         saveState(outState)
     }
@@ -216,7 +216,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super<Fragment>.onActivityCreated(savedInstanceState)
+        super.onActivityCreated(savedInstanceState)
 
         if(savedInstanceState != null) {
             loadState(savedInstanceState)
@@ -243,12 +243,12 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
     fun addHeaderView(headerView: View) {
         val adapter = postsGridView?.getRealAdapter<PostsAdapter>()
 
-        postsGridView?.setAdapter(null)
+        postsGridView?.adapter = null
 
         postsGridView?.addHeaderView(headerView)
         postsGridView?.addFooterView(loadingMoreFooter)
 
-        postsGridView?.setAdapter(adapter)
+        postsGridView?.adapter = adapter
     }
 
     public interface OnFragmentInteractionListener {
@@ -269,7 +269,7 @@ public class PostsGridFragment : Fragment(), DataSource.ResponseListener<Limited
                 putInt(ARG_POSTS_PER_PAGE, postsPerPage)
                 putBoolean(ARG_USE_ORMLITE_DATASOURCE, useORMLiteDataSource)
 
-                fragment.setArguments(this)
+                fragment.arguments = this
             }
 
             return fragment

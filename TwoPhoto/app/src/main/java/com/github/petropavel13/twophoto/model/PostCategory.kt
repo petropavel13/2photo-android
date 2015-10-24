@@ -7,15 +7,15 @@ import com.j256.ormlite.table.DatabaseTable
  * Created by petropavel on 15/06/15.
  */
 
-DatabaseTable(tableName = "posts_categories")
+@DatabaseTable(tableName = "posts_categories")
 class PostCategory {
-    DatabaseField(generatedId = true)
+    @DatabaseField(generatedId = true)
     var id: Int = 0
 
-    DatabaseField(foreign = true, canBeNull = false)
+    @DatabaseField(foreign = true, canBeNull = false)
     var post = Post()
 
-    DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
     var category = Post.Category()
 
     constructor() {}

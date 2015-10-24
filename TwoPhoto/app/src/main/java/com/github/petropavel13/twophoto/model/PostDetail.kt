@@ -10,45 +10,45 @@ import com.j256.ormlite.table.DatabaseTable
  * Created by petropavel on 27/03/15.
  */
 
-DatabaseTable(tableName = "posts")
+@DatabaseTable(tableName = "posts")
 class PostDetail: Post() {
-    Key
+    @Key
     var comments = emptyList<Comment>()
 
-    ForeignCollectionField(eager = true)
+    @ForeignCollectionField(eager = true)
     var dbComments: ForeignCollection<Comment>? = null
 
-    ForeignCollectionField(eager = true, orderColumnName = "order")
+    @ForeignCollectionField(eager = true, orderColumnName = "order")
     var dbEntries: ForeignCollection<Post.Entry>? = null
 
 
-    DatabaseTable(tableName = "comments")
+    @DatabaseTable(tableName = "comments")
     public class Comment {
-        Key
+        @Key
         public var author: Post.Author = Post.Author()
 
-        DatabaseField(foreign = true, canBeNull = false)
+        @DatabaseField(foreign = true, canBeNull = false)
         public var dbAuthor: Post.Author = Post.Author()
 
-        DatabaseField(foreign = true, canBeNull = false)
+        @DatabaseField(foreign = true, canBeNull = false)
         public var dbPost: PostDetail = PostDetail()
 
-        Key DatabaseField(id = true)
+        @Key @DatabaseField(id = true)
         public var id: Int = 0
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var message: String = ""
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var date: String = ""
 
-        Key
+        @Key
         public var reply_to: Int? = null
 
-        DatabaseField(foreign = true)
+        @DatabaseField(foreign = true)
         public var dbReplyTo: PostDetail.Comment? = null
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var rating: Int = 0
     }
 }

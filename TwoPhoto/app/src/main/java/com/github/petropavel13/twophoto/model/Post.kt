@@ -11,58 +11,58 @@ import com.j256.ormlite.table.DatabaseTable
  */
 
 open class Post() {
-    Key
+    @Key
     var entries = emptyList<Entry>()
 
-    Key
+    @Key
     var artists = emptyList<Artist>()
 
-    Key
+    @Key
     var tags = emptyList<Tag>()
 
-    Key
+    @Key
     var categories = emptyList<Category>()
 
-    Key DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
+    @Key @DatabaseField(foreign = true, foreignAutoRefresh = true, canBeNull = false)
     var author = Author()
 
-    Key DatabaseField(canBeNull = false)
+    @Key @DatabaseField(canBeNull = false)
     var number_of_comments: Int = 0
 
-    Key DatabaseField(id = true)
+    @Key @DatabaseField(id = true)
     var id: Int = 0
 
-    Key DatabaseField(canBeNull = false)
+    @Key @DatabaseField(canBeNull = false)
     var title: String = ""
 
-    Key DatabaseField
+    @Key @DatabaseField
     var description: String? = null
 
-    Key DatabaseField
+    @Key @DatabaseField
     var link: String? = null
 
-    Key DatabaseField(canBeNull = false)
+    @Key @DatabaseField(canBeNull = false)
     var date: String = ""
 
-    Key DatabaseField(canBeNull = false)
+    @Key @DatabaseField(canBeNull = false)
     var rating: Int = 0
 
-    Key DatabaseField(canBeNull = false)
+    @Key @DatabaseField(canBeNull = false)
     var color: String = ""
 
-    Key DatabaseField(canBeNull = false)
+    @Key @DatabaseField(canBeNull = false)
     var face_image_url: String = ""
 
 
-    DatabaseTable(tableName = "authors")
+    @DatabaseTable(tableName = "authors")
     open public class Author(): Parcelable {
-        Key DatabaseField(id = true)
+        @Key @DatabaseField(id = true)
         public var id: Int = 0
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var name: String = ""
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var avatar_url: String = ""
 
         companion object {
@@ -92,27 +92,27 @@ open class Post() {
     }
 
 
-    DatabaseTable(tableName = "entries")
+    @DatabaseTable(tableName = "entries")
     public class Entry(): Parcelable {
-        DatabaseField(foreign = true, canBeNull = false)
+        @DatabaseField(foreign = true, canBeNull = false)
         public var dbPost: PostDetail = PostDetail()
 
-        Key DatabaseField(id = true)
+        @Key @DatabaseField(id = true)
         public var id: Int = 0
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var big_img_url: String = ""
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var medium_img_url: String = ""
 
-        Key DatabaseField
+        @Key @DatabaseField
         public var description: String? = null
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var rating: Int = 0
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var order: Int = 0
 
         companion object {
@@ -148,35 +148,35 @@ open class Post() {
     }
 
 
-    DatabaseTable(tableName = "artists")
+    @DatabaseTable(tableName = "artists")
     public class Artist() {
-        Key DatabaseField(id = true)
+        @Key @DatabaseField(id = true)
         public var id: Int = 0
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var name: String = ""
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var avatar_url: String = ""
     }
 
 
-    DatabaseTable(tableName = "categories")
+    @DatabaseTable(tableName = "categories")
     public class Category() {
-        Key DatabaseField(id = true)
+        @Key @DatabaseField(id = true)
         public var id: Int = 0
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var title: String = ""
     }
 
 
-    DatabaseTable(tableName = "tags")
+    @DatabaseTable(tableName = "tags")
     public class Tag() {
-        Key DatabaseField(id = true)
+        @Key @DatabaseField(id = true)
         public var id: Int = 0
 
-        Key DatabaseField(canBeNull = false)
+        @Key @DatabaseField(canBeNull = false)
         public var title: String = ""
     }
 }

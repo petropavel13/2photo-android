@@ -9,11 +9,11 @@ import com.j256.ormlite.misc.TransactionManager
  * Created by petropavel on 15/06/15.
  */
 
-throws(SQLiteException::class)
+@Throws(SQLiteException::class)
 fun PostDetail.Comment.saveInDatabase(dbHelper: DatabaseOpenHelper, allComments: Collection<PostDetail.Comment>) {
     val comment = this
 
-    TransactionManager.callInTransaction(dbHelper.getConnectionSource(), {
+    TransactionManager.callInTransaction(dbHelper.connectionSource, {
         dbHelper.authorsDao().createIfNotExists(author)
 
         dbAuthor = author

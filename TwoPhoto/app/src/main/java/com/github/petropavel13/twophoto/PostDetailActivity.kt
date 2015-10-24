@@ -92,7 +92,7 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
             dataSource = if (getBooleanExtra(FETCH_FROM_DB_KEY, false)) {
                 ORMLitePostsDataSource(DatabaseOpenHelper(ctx))
             } else {
-                with(SpiceManager(javaClass<Jackson2GoogleHttpClientSpiceService>())) {
+                with(SpiceManager(Jackson2GoogleHttpClientSpiceService::class.java)) {
                     spiceManager = this
                     SpicePostsDataSource(this)
                 }
@@ -114,7 +114,7 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
                 authorItemView = findViewById(R.id.post_detail_footer_author_item_view) as? AuthorItemView
 
                 authorItemView?.setOnClickListener {
-                    with(Intent(ctx, javaClass<AuthorDetailActivity>())) {
+                    with(Intent(ctx, AuthorDetailActivity::class.java)) {
                         putExtra(AuthorDetailActivity.AUTHOR_KEY, authorItemView!!.author)
                         startActivity(this)
                     }
@@ -125,7 +125,7 @@ public class PostDetailActivity : AppCompatActivity(), DataSource.ResponseListen
 
             setOnItemClickListener { adapterView, view, i, l ->
                 with(adapterView.getRealAdapter<EntriesAdapter>()) {
-                    val postEntriesIntent = Intent(ctx, javaClass<PostEntriesActivity>())
+                    val postEntriesIntent = Intent(ctx, PostEntriesActivity::class.java)
                     postEntriesIntent.putParcelableArrayListExtra(PostEntriesActivity.POST_ENTRIES_KEY, this?.entries?.toArrayList())
                     postEntriesIntent.putExtra(PostEntriesActivity.SELECTED_ENTRY_INDEX, i - 1)
                     postEntriesIntent.putExtra(POST_ID_KEY, postId)

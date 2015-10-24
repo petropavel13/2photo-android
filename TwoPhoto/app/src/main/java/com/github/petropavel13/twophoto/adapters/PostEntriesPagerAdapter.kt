@@ -26,7 +26,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
         set(newValue) {
             _onEntryTapListener = newValue
 
-            _positionViewMap.values().forEach { it.onTapListener = newValue }
+            _positionViewMap.values.forEach { it.onTapListener = newValue }
         }
 
     private var _showEntriesDescription = true
@@ -36,7 +36,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
         set(newValue) {
             _showEntriesDescription = newValue
 
-            _positionViewMap.values().forEach { it.showDescriptionText = newValue }
+            _positionViewMap.values.forEach { it.showDescriptionText = newValue }
         }
 
     private val _positionViewMap = HashMap<Int, EntryView>(3)
@@ -46,7 +46,7 @@ class PostEntriesPagerAdapter(ctx: Context, var entries: List<Post.Entry>): Page
     override fun getCount() = entries.count()
 
     override fun isViewFromObject(view: View?, obj: Any?): Boolean {
-        return obj.identityEquals(view)
+        return obj === view
     }
 
     override fun instantiateItem(container: View?, position: Int): Any? {

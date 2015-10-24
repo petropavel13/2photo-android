@@ -17,7 +17,7 @@ class LimitedPostsList: LimitedResultsList<Post>()
 
 class PostsRequest(limit: Int,
                    page: Int = 1,
-                   postsFilters: PostsFilters = PostsFilters()): GoogleHttpClientSpiceRequest<LimitedPostsList>(javaClass<LimitedPostsList>()) {
+                   postsFilters: PostsFilters = PostsFilters()): GoogleHttpClientSpiceRequest<LimitedPostsList>(LimitedPostsList::class.java) {
 
     private val urlString: String
 
@@ -51,7 +51,7 @@ class PostsRequest(limit: Int,
     }
 }
 
-class PostRequest(postId: Int): GoogleHttpClientSpiceRequest<PostDetail>(javaClass<PostDetail>()) {
+class PostRequest(postId: Int): GoogleHttpClientSpiceRequest<PostDetail>(PostDetail::class.java) {
     val url = BuilderForApiUri()
             .appendEncodedPath("posts/$postId/")
             .build().toString()
@@ -65,7 +65,7 @@ class PostRequest(postId: Int): GoogleHttpClientSpiceRequest<PostDetail>(javaCla
     }
 }
 
-class AuthorRequest(authorId: Int): GoogleHttpClientSpiceRequest<AuthorDetail>(javaClass<AuthorDetail>()) {
+class AuthorRequest(authorId: Int): GoogleHttpClientSpiceRequest<AuthorDetail>(AuthorDetail::class.java) {
     val url = BuilderForApiUri()
             .appendEncodedPath("authors/$authorId/")
             .build().toString()

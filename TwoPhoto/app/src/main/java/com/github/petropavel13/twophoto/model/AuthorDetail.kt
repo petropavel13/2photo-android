@@ -7,15 +7,15 @@ import com.google.api.client.util.Key
  */
 
 class AuthorDetail: Post.Author() {
-    Key public var number_of_comments: Int = 0
-    Key public var number_of_posts: Int = 0
-    Key public var reg_date: String = ""
-    Key public var last_visit: String = ""
-    Key public var country: String? = ""
-    Key public var city: String? = ""
-    Key public var site: String? = ""
-    Key public var skype: String? = ""
-    Key public var email: String? = ""
-    Key public var carma: Int = 0
-    Key public var description: String? = ""
+    @Key public var number_of_comments: Int = 0
+    @Key public var number_of_posts: Int = 0
+    @Key public var reg_date: String = ""
+    @Key public var last_visit: String = ""
+    @Key public var country: String? = ""
+    @Key public var city: String? = ""
+    @Key public var site: String? = ""
+    @Key public var skype: String? = ""
+    @Key public var email: String? = ""
+    @Key public var carma: Int = 0
+    @Key public var description: String? = ""
 }
